@@ -1,0 +1,7 @@
+nltk
+pymongo
+numpy
+sklearn
+gensim
+pyemd
+rpyc

@@ -1,0 +1,72 @@
+# joe playbooks/gists.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/gists.yml
+
+---
+- hosts: "{{active_hosts_groups}}"
+  vars_files:
+    - ../variables/gits-list.json
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  # become: yes
+  become_method: sudo
+  # gather_facts: false
+
+  tasks:
+  
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+
+  # -----------------------------------
+  # Real gits tasks
+  # -----------------------------------
+
+  - name: Copy private key to the remote machine
+    with_items: "{{ items_array }}"
+    when: "{{ item.key_file_pem is defined and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy: 
+      src: '{{ item.key_file_pem }}' 
+      # dest: '/home/{{ansible_user_id}}/.ssh/github_key.pem'
+      dest: '/home/{{ansible_user_id}}/.ssh/id_rsa'
+      mode: 'ug=rw,o=,g='
+
+  - name: Copy public key to the remote machine
+    with_items: "{{ items_array }}"
+    when: "{{ item.key_file_pub is defined and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy: 
+      src: '{{ item.key_file_pub }}'
+      dest: '/home/{{ansible_user_id}}/.ssh/id_rsa.pub'
+      mode: 'ug=rw,o=r,g=r'
+
+  - name: Clone git repository to the docroot.
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/git_module.html
+    # become: yes
+    git:
+      repo: "{{item.repo}}"
+      dest: "{{item.dest}}"
+      depth: "{{item.depth}}"
+      force: "{{item.force}}"
+      recursive: "{{item.recursive}}"
+      version: "{{item.version | default(omit)}}"
+      accept_hostkey: yes
+      # key_file: '/home/{{ansible_user_id}}/.ssh/github_key.pem'
+      # key_file: '/home/{{ansible_user_id}}/.ssh/id_rsa'
+  
+  - name: Set cloned repos privileges
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    become: yes
+    file:
+      path: '{{item.dest}}'
+      state: 'directory'
+      owner: '{{item.owner}}'
+      group: '{{item.group}}'
+      mode: '{{item.mode}}'
+      recurse: yes

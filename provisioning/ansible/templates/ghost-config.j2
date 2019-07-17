@@ -1,0 +1,29 @@
+{
+  "url": "https://{{ item.host }}/{{ item.language }}",
+  "server": {
+    "port": {{ item.port }},
+    "host": "127.0.0.1"
+  },
+  "database": {
+    "client": "mysql",
+    "connection": {
+      "host": "localhost",
+      "user": "{{ item.database.user }}",
+      "password": "{{ item.database.password }}",
+      "database": "{{ item.database.db }}"
+    }
+  },
+  "mail": {
+    "transport": "Direct"
+  },
+  "logging": {
+    "transports": [
+      "file",
+      "stdout"
+    ]
+  },
+  "process": "systemd",
+  "paths": {
+    "contentPath": "/var/www/{{ item.folder }}/{{ item.language }}/content"
+  }
+}

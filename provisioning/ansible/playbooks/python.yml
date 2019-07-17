@@ -1,0 +1,83 @@
+# joe playbooks/python.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/python.yml
+
+---
+- hosts: "{{active_hosts_groups}}"
+  vars_files:
+    - ../variables/python-list.json
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  # become: yes
+  # become_method: sudo
+  gather_facts: false
+
+  tasks:
+
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+
+# -----------------------------------
+# Real python tasks
+# -----------------------------------
+
+  - name: Install python2 packages
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'pip23' or item.type == 'pip2') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/2.6/modules/pip_module.html
+    pip:
+      name: "{{item.package}}"
+      # https://grokbase.com/t/gg/ansible-project/149h48ttgb/passing-module-params-conditionally
+      virtualenv: "{{item._virtualenv + '2' if item._virtualenv is defined else omit }}" # default is `omit`
+      executable: "{{item.executable | default(omit) }}"
+      virtualenv_python: 'python2'
+    # when: item.type == 'pip23' or item.type == 'pip2'
+
+  - name: Install python3 packages
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'pip23' or item.type == 'pip3') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    pip:
+      name: "{{item.package}}"
+      # https://grokbase.com/t/gg/ansible-project/149h48ttgb/passing-module-params-conditionally
+      virtualenv: "{{item._virtualenv + '3' if item._virtualenv is defined else omit }}" # default is `omit`
+      executable: "{{item.executable | default(omit) }}"
+      virtualenv_python: 'python3'
+    # when: item.type == 'pip23' or item.type == 'pip3'
+
+  - name: Transfer requirements
+    with_items: "{{ items_array }}"
+    when: "{{ item.requirements is defined and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    copy:
+      src: "{{item.requirements}}"
+      dest: "{{'/tmp/' + item.key + '.txt'}}"
+      force: true
+    # when: item.requirements is defined
+
+  - name: Install python2 requirements
+    with_items: "{{ items_array }}"
+    when: "{{ (item.requirements is defined) and (item.type == 'requirements2' or item.type == 'requirements23') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/2.6/modules/pip_module.html
+    pip:
+      # https://grokbase.com/t/gg/ansible-project/149h48ttgb/passing-module-params-conditionally
+      virtualenv: "{{item._virtualenv + '2' if item._virtualenv is defined else omit }}" # default is `omit`
+      executable: "{{ item.executable | default(omit) }}"
+      virtualenv_python: 'python2'
+      requirements: "{{ '/tmp/' + item.key + '.txt' }}"
+    # when: (item.requirements is defined) and (item.type == 'requirements2' or item.type == 'requirements23')
+
+  - name: Install python3 requirements
+    with_items: "{{ items_array }}"
+    when: "{{ ((item.requirements is defined) and (item.type == 'requirements23' or item.type == 'requirements3')) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    pip:
+      # https://grokbase.com/t/gg/ansible-project/149h48ttgb/passing-module-params-conditionally
+      virtualenv: "{{item._virtualenv + '3' if item._virtualenv is defined else omit }}" # default is `omit`
+      executable: "{{item.executable | default(omit) }}"
+      virtualenv_python: 'python3'
+      requirements: "{{ '/tmp/' + item.key + '.txt' }}"
+    # when: (item.requirements is defined) and (item.type == 'requirements23' or item.type == 'requirements3')
+
+# virtualenv -p python2 /var/services/colabo-env-python2
+# virtualenv -p python3 /var/services/colabo-env-python3
+# /var/services/colabo-env-python2/bin/python2 /var/colabo/similarity_functions.py

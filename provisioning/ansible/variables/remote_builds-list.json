@@ -1,0 +1,127 @@
+{
+    "items_array": [{
+            "key": "mongodb-install-1 - Import the public key",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        }, {
+            "key": "mongodb-install-1.1 - Check ubuntu version",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "lsb_release -a",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        },
+        {
+            "key": "mongodb-install-2 - Create a list file",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "echo 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse' | tee /etc/apt/sources.list.d/mongodb-org-4.0.list",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        }, {
+            "key": "mongodb-install-3 - Reload local package database",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "apt-get update",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        },
+        {
+            "key": "mongodb-install-4 - Install the MongoDB packages",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "apt-get install -y mongodb-org",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        },
+        {
+            "key": "mongodb-install-5 - Activate",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "systemctl start mongod",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        },
+        {
+            "key": "mongodb-install-6 - Check the status",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "systemctl is-active --quiet mongod",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        },
+        {
+            "key": "certbot-auto - install",
+            "user": "root",
+            "path": "/etc/nginx/letsencrypt",
+            "command": "wget https://dl.eff.org/certbot-auto",
+            "_tags": [
+                "certificates"
+            ],
+            "hosts": [
+                "instances",
+                "blogs",
+                "litterra"
+            ]
+        },
+        {
+            "key": "certbot-auto - set mode",
+            "user": "root",
+            "path": "/etc/nginx/letsencrypt",
+            "command": "chmod a+x certbot-auto",
+            "_tags": [
+                "certificates"
+            ],
+            "hosts": [
+                "instances",
+                "blogs",
+                "litterra"
+            ]
+        }
+    ]
+}

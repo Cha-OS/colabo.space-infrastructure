@@ -1,0 +1,42 @@
+
+# joe playbooks/local_builds.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/local_builds.yml
+
+---
+- hosts: "{{active_hosts_groups}}"
+  vars_files:
+    - ../variables/local_builds-list.json
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  # https://docs.ansible.com/ansible/2.7/user_guide/become.html#id1
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  tasks:
+  
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+
+  # -----------------------------------
+  # Real build tasks
+  # -----------------------------------
+  - name: Report angular cli command
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    debug:
+        msg: "{{\"ng build --prod --base-href '\" + item.basehref + \"'\" if item.basehref is defined else 'ng build --prod' }}"
+  - name: Run angular cli build (on local machine)
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    # command: "{{\"ng build --prod --base-href '\" + item.basehref + \"'\" if item.basehref is defined else 'ng build --prod' }}"
+    command: "{{\"ng build --base-href '\" + item.basehref + \"'\" if item.basehref is defined else 'ng build' }}"
+    args:
+      chdir: "{{item.path | default(None) }}" # default is None
+    # https://stackoverflow.com/questions/44004727/how-to-run-local-command-via-ansible-playbook?rq=1
+    delegate_to: localhost
+    become: no

@@ -1,0 +1,189 @@
+# joe playbooks/python.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/python.yml
+
+# NOTE 1: To make it working properly, you need to have installed PyMySQL on the remote machine:
+# https://docs.ansible.com/ansible/latest/modules/mysql_db_module.html#notes
+# NOTE 2: You need to change root password manually, the SH* is not working ...
+# sudo systemctl status mysql
+# sudo systemctl stop mysql
+# sudo mkdir /var/run/mysqld
+# sudo chown mysql:mysql /var/run/mysqld
+# sudo mysqld --skip-grant-tables --user=mysql &
+## select Host, user, authentication_string, password_expired, password_last_changed, password_lifetime, account_locked from user;
+## not working well: mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '&5py}h#Vwuq3+P^j'; FLUSH_PRIVILEGES;"
+## https://stackoverflow.com/questions/37879448/mysql-fails-on-mysql-error-1524-hy000-plugin-auth-socket-is-not-loaded
+# mysql -u root -e "use mysql; update user set authentication_string=PASSWORD('&5py}h#Vwuq3+P^j') where User='root'; update user set plugin='mysql_native_password' where User='root'; flush privileges;"
+# ps -ax | grep mysql
+# sudo pkill -f mysql
+# ps -ax | grep mysql
+# sudo systemctl status mysql
+# sudo systemctl start mysql
+## provide and test with new password
+# mysql -u root -p
+---
+- hosts: "{{active_hosts_groups}}"
+  vars:
+    original_mysql_root_password: "testpass"
+    mysql_root_password: "&5py}h#Vwuq3+P^j"
+  vars_files:
+    - ../variables/database-list.json
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  tasks:
+
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+
+  # - name: Set a new root password
+  #   https://stackoverflow.com/questions/42267299/ansible-install-mysql-5-7-set-root-user-password
+  #   mysql_user: 
+  #     check_implicit_admin: yes
+  #     login_user: root
+  #     login_password: "{{ original_mysql_root_password }}"
+  #     user: root
+  #     password: "{{ mysql_root_password }}"
+  #     host: "{{ item }}"
+  #     # priv='*.*:ALL,GRANT'
+  #   with_items:
+  #     - localhost
+  #     - 127.0.0.1
+  #     # - {{ server_hostname }}
+
+  # - name: stop mysql service
+  # # https://docs.ansible.com/ansible/latest/modules/systemd_module.html
+  # # sudo systemctl status mysql
+  # # sudo systemctl stop mysql
+  #   systemd:
+  #     name: mysql
+  #     state: stopped
+
+  # - name: Set folders
+  #   # https://docs.ansible.com/ansible/latest/modules/file_module.html
+  #   # sudo mkdir /var/run/mysqld
+  #   # sudo chown mysql:mysql /var/run/mysqld
+  #   file:
+  #     path: '/var/run/mysqld'
+  #     state: 'directory'
+  #     owner: 'mysql'
+  #     group: 'mysql'
+  #     mode: 'ug=rwx,o=rx,g+s'
+  #     recurse: yes
+
+# cat /etc/systemd/system/multi-user.target.wants/mysql.service
+# ps -ax | grep mysql
+# kill -TERM <pid>
+# [How To Reset Your MySQL or MariaDB Root Password on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password-on-ubuntu-18-04)
+# [how to run MySql as root](https://ubuntuforums.org/showthread.php?t=2343368)
+# [Set / Change / Reset the MySQL root password on Ubuntu Linux](http://ubuntu.flowconsult.at/en/mysql-set-change-reset-root-password/)
+
+  # - name: Start mysqld with --skip-grant-tables
+  #   # sudo /usr/sbin/mysqld --skip-grant-tables --skip-networking --user=mysql &
+  #   command: mysqld --skip-grant-tables --skip-networking --user=mysql &
+  #   ignore_errors: yes
+
+  # - name: Set a new root password
+  #   # mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '&5py}h#Vwuq3+P^j'; FLUSH_PRIVILEGES;"
+  #   # select Host, user, authentication_string, password_expired, password_last_changed, password_lifetime, account_locked from user;
+  #   # [How to run mysql command from terminal?](https://askubuntu.com/questions/341584/how-to-run-mysql-command-from-terminal)
+  #   command: mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '&5py}h#Vwuq3+P^j'; FLUSH_PRIVILEGES;"
+  #   # ignore_errors: yes
+
+  # - name: Stop mysqld with --skip-grant-tables
+  #   # https://stackoverflow.com/questions/8987037/how-to-kill-all-processes-with-a-given-partial-name
+  #   command: sudo pkill -f mysql
+
+  # - name: Start mysql service
+  # # https://docs.ansible.com/ansible/latest/modules/systemd_module.html
+  # # sudo systemctl status mysql
+  # # sudo systemctl start mysql
+  #   systemd:
+  #     name: mysql
+  #     state: started
+
+# ----------------------------------
+# MySQL
+# ----------------------------------
+
+  - name: Create MySQL DBs
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'mysql.database') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/mysql_db_module.html
+    mysql_db:
+      name: "{{item.name}}"
+      # https://grokbase.com/t/gg/ansible-project/149h48ttgb/passing-module-params-conditionally
+      state: present
+      login_user: 'root'
+      login_password: "{{ mysql_root_password }}"
+  
+      # login_unix_socket: /var/run/mysqld/mysqld.sock
+    # when: item.type == 'mysql.database'
+
+  - name: Create MySQL User
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'mysql.user') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    mysql_user:
+      name: "{{item.name}}"
+      append_privs: true
+      password: "{{item.password | default(omit) }}" 
+      priv: "{{item.privileges}}"
+      login_user: 'root'
+      login_password: "{{ mysql_root_password }}"
+      state: present
+    # when: item.type == 'mysql.user'
+    
+# ----------------------------------
+# Postgres
+# ----------------------------------
+  
+  - name: Create Postgres DBs
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'postgres') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/postgresql_db_module.html
+    postgresql_db:
+      name: "{{item.database.name}}"
+      state: present
+      # login_user: 'postgres'
+      # login_password: "{{ postgres_root_password }}"
+    # https://stackoverflow.com/questions/25751085/postgresql-failing-peer-authentication-with-ansible
+    become_user: "postgres"
+  
+  - name: Create Postgres User
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'postgres') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/postgresql_user_module.html
+    postgresql_user:
+      db: "{{item.database.name}}"
+      name: "{{item.user.name}}"
+      password: "{{item.user.password}}"
+      priv: ALL
+      state: present
+      # login_user: 'postgres'
+      # login_password: "{{ postgres_root_password }}"
+    # https://stackoverflow.com/questions/25751085/postgresql-failing-peer-authentication-with-ansible
+    become_user: "postgres"
+
+  - name: Set Postgres User privilege
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'postgres') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    postgresql_user:
+      name: "{{item.user.name}}"
+      role_attr_flags: NOSUPERUSER,NOCREATEDB
+    become_user: "postgres"
+
+  - name: Postgres ensure no other user can access the database
+    with_items: "{{ items_array }}"
+    when: "{{ (item.type == 'postgres') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    postgresql_privs:
+      db: "{{item.database.name}}"
+      role: PUBLIC
+      type: database
+      priv: ALL
+      state: absent
+    become_user: "postgres"

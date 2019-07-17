@@ -1,0 +1,41 @@
+# -----------------------------------
+# NOTE: THIS IS OBSOLATED
+# -----------------------------------
+# joe playbooks/init.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/init.yml
+---
+#   vars_files:
+#     - ../variables/testing-tags.json
+
+- name: report-start
+  debug:
+      msg: "_load_host_speciffic_data tasks imorted and starting for hosts group: {{active_hosts_groups}}"
+
+# -----------------------------------
+# Extending gits dictionary with group speciffic entries
+# -----------------------------------
+# - name: HOST-SPECIFFIC-VARS-1 Include group related vars
+#   # https://docs.ansible.com/ansible/2.5/modules/include_vars_module.html
+#   include_vars: "{{ item }}"
+#   # name: testing_tags_group
+#   with_first_found:
+#   - ../variables/testing_tags-list-{{group_names[0]}}.json
+#   # a safe fall-drop to avoid fatal error of a missing file
+#   - ../variables/empty.json
+#   tags: [start, home]
+
+# - name: HOST-SPECIFFIC-VARS-2 print testing_tags_group var
+#   debug:
+#       msg: "{{testing_tags_group}}"
+#   when: testing_tags_group is defined
+# - name: HOST-SPECIFFIC-VARS-3 print NO testing_tags_group var
+#   debug:
+#       msg: "There are no variables for the group {{group_names[0]}}"
+#   when: testing_tags_group is defined
+# - name: HOST-SPECIFFIC-VARS-4 merging group related variables `testing_tags_group` into global `testing_tags`
+#   set_fact: testing_tags="{{ testing_tags|combine(testing_tags_group) }}"
+#   when: testing_tags_group is defined
+# - name: HOST-SPECIFFIC-VARS-5 print testing_tags_all var
+#   debug:
+#       msg: "{{testing_tags}}"
+#   when: testing_tags is defined

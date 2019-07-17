@@ -1,0 +1,170 @@
+{
+    "items_array": [{
+            "key": "colaboflow-dashboard-frontend",
+            "src": "../../../../../LitTerra/src/frontend/apps/colaboflow_dashboard/dist/apps_colaboflow_dashboard/",
+            "dest": "/var/www/litterra/dashboard",
+            "delete": false,
+            "mode": "push",
+            "recursive": true,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "directory",
+            "_tags": [
+                "colaboflow"
+            ],
+            "hosts": [
+                "_litterra"
+            ]
+        },
+        {
+            "key": "colaboflow-dashboard-frontend-config",
+            "src": "../../files/frontend/global-server.js",
+            "dest": "/var/www/colaboflow-dashboard-frontend/config/global.js",
+            "delete": false,
+            "mode": "push",
+            "recursive": false,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "file",
+            "_tags": [
+                "colaboflow"
+            ],
+            "hosts": [
+                "_litterra"
+            ]
+        },
+        {
+            "key": "colaboflow-dashboard-backend-config",
+            "src": "../../files/backend/global-server.js",
+            "dest": "/var/repos/litterra/src/backend/apps/colaboflow_dashboard/dist/config/global.js",
+            "dest_folder_create": "/var/repos/litterra/src/backend/apps/colaboflow_dashboard/dist/config/",
+            "delete": false,
+            "mode": "push",
+            "recursive": false,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "file",
+            "_tags": [
+                "colaboflow"
+            ],
+            "hosts": [
+                "litterra"
+            ]
+        },
+        {
+            "key": "service-go-config",
+            "src": "../../files/services/flow/go/global-server.js",
+            "dest": "/var/repos/colabo/src/services/services/colaboflow-go/dist/config/global.js",
+            "dest_folder_create": "/var/repos/colabo/src/services/services/colaboflow-go/dist/config/",
+            "delete": false,
+            "mode": "push",
+            "recursive": false,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "file",
+            "_tags": [
+                "colaboflow"
+            ],
+            "hosts": [
+                "litterra",
+                "service-1"
+            ]
+        },
+
+
+
+        {
+            "key": "colabo-business-services",
+            "src": "../../../../colabo-business-services/",
+            "dest": "/var/services/colabo-business-services/",
+            "delete": false,
+            "mode": "push",
+            "recursive": true,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "directory",
+            "hosts": [
+                "services",
+                "litterra"
+            ]
+        },
+        {
+            "key": "colabo-business-services-config",
+            "src": "../../../../colabo-business-services/similarity/config-server-remote.json",
+            "dest": "/var/services/colabo-business-services/similarity/config-server.json",
+            "delete": false,
+            "mode": "push",
+            "recursive": false,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "file",
+            "hosts": [
+                "services",
+                "litterra"
+            ]
+        },
+        {
+            "key": "colabo-frontend",
+            "src": "../../../../colabo/src/frontend/apps/psc/dist/performing_sustainable_coevolution/",
+            "dest": "/var/www/fv/",
+            "delete": true,
+            "mode": "push",
+            "recursive": true,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "directory",
+            "_tags": [
+                "frontend"
+            ],
+            "hosts": [
+                "instances",
+                "_litterra"
+            ]
+        },
+        {
+            "key": "colabo-frontend-config",
+            "src": "../../files/frontend/global-server.js",
+            "dest": "/var/www/fv/config/global.js",
+            "delete": false,
+            "mode": "push",
+            "recursive": false,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "file",
+            "_tags": [
+                "frontend"
+            ],
+            "hosts": [
+                "instances",
+                "_litterra"
+            ]
+        },
+        {
+            "key": "colabo-backend-config",
+            "src": "../../files/backend/global-server.js",
+            "dest": "/var/repos/colabo/src/backend/apps/colabo-space/dist/config/global.js",
+            "delete": false,
+            "mode": "push",
+            "recursive": false,
+            "file_owner": "www-data",
+            "file_group": "developers",
+            "file_mode": "ug=rwX,o=rX,g+s",
+            "file_state": "file",
+            "_tags": [
+                "backend"
+            ],
+            "hosts": [
+                "instances",
+                "_litterra"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+# joe playbooks/init.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/init.yml
+---
+- hosts: "{{active_hosts_groups}}"
+  vars_files:
+    - ../variables/files-list.json
+  remote_user: ansible
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  become: yes
+  become_method: sudo
+  gather_facts: false
+  tasks:
+
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+
+  - name: Set folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    file:
+      path: '{{item.key}}'
+      state: '{{item.state}}'
+      owner: '{{item.owner}}'
+      group: '{{item.group}}'
+      mode: '{{item.mode}}'
+      recurse: yes

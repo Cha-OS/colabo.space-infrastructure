@@ -1,0 +1,67 @@
+{
+    "items_array": [{
+            "key": "s-similarity",
+            "description": "Colabo.Space Similarity Service",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/services/colabo-business-services/similarity/",
+            "exec_start": "/var/services/colabo-env-python2/bin/python2 /var/services/colabo-business-services/similarity/similarity_functions.py",
+            "hosts": [
+                "services"
+            ]
+        },
+        {
+            "key": "b-colabo",
+            "description": "Colabo.Space Backend (node.js)",
+            "env": "",
+            "working_dir": "/var/repos/colabo/src/backend/apps/colabo-space/dist/",
+            "exec_start": "/usr/bin/nodejs /var/repos/colabo/src/backend/apps/colabo-space/dist/index.js 8001",
+            "hosts": [
+                "instances"
+            ]
+        },
+        {
+            "key": "s-colaboflow-audit",
+            "description": "ColaboFlow.Audit gRPC service",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/repos/colabo/src/services/services/colaboflow-audit/dist/",
+            "exec_start": "/usr/bin/nodejs /var/repos/colabo/src/services/services/colaboflow-audit/dist/index.js",
+            "hosts": [
+                "service-1",
+                "litterra"
+            ]
+        },
+        {
+            "key": "s-colaboflow-go",
+            "description": "ColaboFlow.Go gRPC service",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/repos/colabo/src/services/services/colaboflow-go/dist/",
+            "exec_start": "/usr/bin/nodejs /var/repos/colabo/src/services/services/colaboflow-go/dist/index.js",
+            "hosts": [
+                "service-1",
+                "litterra"
+            ]
+        },
+        {
+            "key": "b-colaboflow-dashboard",
+            "description": "ColaboFlow Dashboard Backend (node.js)",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/repos/semanticMediator/src/backend/apps/ace-mediator/dist/",
+            "exec_start": "/usr/bin/nodejs /var/repos/semanticMediator/src/backend/apps/ace-mediator/dist/index.js 6001",
+            "hosts": [
+                "litterra"
+            ]
+        }
+    ]
+}

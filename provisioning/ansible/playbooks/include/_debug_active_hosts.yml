@@ -1,0 +1,19 @@
+# joe playbooks/init.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/init.yml
+---
+#   vars_files:
+#     - ../variables/testing-tags.json
+
+  - name: report-start
+    debug:
+      msg: "_load_host_speciffic_data tasks imorted and starting for hosts group: {{active_hosts_groups}}"
+
+  - name: Debug folders
+    with_items: "{{ items_array }}"
+    debug:
+      msg: "intersection of active_hosts_groups={{ active_hosts_groups }} with item.hosts={{ item.hosts | default('not-defined') }} is: {{ active_hosts_groups | intersect(item.hosts) if item.hosts is defined else 'not-defined' }}"
+
+  - name: matched_hosts_groups is existing
+    with_items: "{{ items_array }}"
+    debug:
+      msg: "intersection of active_hosts_groups={{ active_hosts_groups }} with item.hosts={{ item.hosts | default('not-defined')}} is not empty: {{ (item.hosts is not defined or (active_hosts_groups | intersect(item.hosts)) is defined and ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}"

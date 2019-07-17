@@ -1,0 +1,52 @@
+# joe playbooks/services.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/services.yml
+---
+- hosts: "{{active_hosts_groups}}"
+  vars_files:
+    - ../variables/services-list.json
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  tasks:
+    
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+
+  # -----------------------------------
+  # Real services tasks
+  # -----------------------------------
+  - name: create systemd services' files
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module
+    # https://www.freedesktop.org/software/systemd/man/systemd.service.html#ExecStart=
+    # Python environment
+    #   https://stackoverflow.com/questions/37211115/how-to-enable-a-virtualenv-in-a-systemd-service-unit
+    # https://serverfault.com/questions/821575/systemd-run-a-python-script-at-startup-virtualenv
+    template: src=../templates/service.j2 dest="{{ item.service_path }}/{{ item.key }}.service"
+  - name: link systemd services' into /etc/systemd/system
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "{{ item.service_path }}/{{ item.key }}.service"
+      dest: "/etc/systemd/system/{{ item.key }}.service"
+      state: link
+
+  - name: start services
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # https://ansible-manual.readthedocs.io/en/stable-2.3/systemd_module.html
+    # sudo systemctl status b-colabo.service
+    systemd:
+      name: "{{ item.key }}"
+      # state=started
+      state: restarted
+      enabled: true
+      daemon_reload: yes

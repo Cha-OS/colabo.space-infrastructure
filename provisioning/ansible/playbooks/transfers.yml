@@ -1,0 +1,112 @@
+# joe playbooks/transfers.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/transfers.yml
+
+---
+- hosts: "{{active_hosts_groups}}"
+  vars:
+    folder_paths:
+      a_placeholder:
+
+  vars_files:
+    - ../variables/transfers-list.json
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  tasks:
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+  
+  # -----------------------------------
+  # Real transfers tasks
+  # -----------------------------------
+  # - name: Transfer content (using copy)
+  #   # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+  #   # NOTE: The copy module recursively copy facility does not scale to lots (>hundreds) of files. For alternative, see synchronize module, which is a wrapper around rsync
+  #   # https://docs.ansible.com/ansible/latest/modules/synchronize_module.html
+  #   with_items: "{{ items_array }}"
+  #   when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+  #   copy:
+  #     src: "{{item.src}}"
+  #     dest: "{{item.dest}}"
+  #     force: "{{item.force}}"
+  #     follow: "{{item.follow}}"
+  #     local_follow: "{{item.local_follow}}"
+  #     owner: "{{item.owner}}"
+  #     group: "{{item.group}}"
+  #     directory_mode: "{{item.directory_mode}}"
+  #     mode: "{{item.mode}}"
+
+  - name: Get destination folder for `file` type of destination
+    # with_items: "{{ items_array }}"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html#with-indexed-items
+    loop: "{{ items_array|flatten(levels=1) }}"
+    loop_control:
+      index_var: index
+    when: "{{ item.file_state == 'file' and item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # set_fact:
+    #   item: "{{ item 
+    #   | combine({
+    #     'folder_path': 'item.dest | regex_replace('^(.*)/[^\/]+$', '\\1'')
+    #   }, recursive=True)
+    #   }}"
+    set_fact:
+      folder_paths: "{{ folder_paths 
+      | combine({
+          item.key: item.dest | regex_replace('^(.*)/[^\/]+$', '\\1')
+      }, recursive=True)
+      }}"
+
+  - name: Report destination folder for `file` type of destination
+    # with_items: "{{ folder_paths }}"
+    loop: "{{ folder_paths|dict2items }}"
+    loop_control:
+      index_var: index
+    debug:
+      msg: "item[{{ index }}] for '{{ item.key }}' is: '{{ item.value }}'"
+
+  - name: Ensure destination exists for `file` type of destination
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    with_items: "{{ items_array }}"
+    when: "{{ item.file_state == 'file' and item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    file:
+      path: '{{folder_paths[item.key]}}'
+      state: 'directory'
+      owner: '{{item.file_owner}}'
+      group: '{{item.file_group}}'
+      mode: '{{item.file_mode}}'
+      recurse: yes
+
+  - name: Transfer content (using synchronize)
+    # https://docs.ansible.com/ansible/latest/modules/synchronize_module.html
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    synchronize:
+      archive: true
+      checksum: true
+      compress: true
+      copy_links: false
+      delete: "{{item.delete}}"
+      src: "{{item.src}}"
+      dest: "{{item.dest}}"
+      recursive: "{{item.recursive}}"
+      mode: "{{item.mode}}"
+      # rsync_opts: 
+      # - '--relative'
+
+  - name: Set transfered files privileges
+    with_items: "{{ items_array }}"
+    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '{{item.dest}}'
+      state: '{{item.file_state}}'
+      owner: '{{item.file_owner}}'
+      group: '{{item.file_group}}'
+      mode: '{{item.file_mode}}'
+      recurse: "{{item.recursive}}"

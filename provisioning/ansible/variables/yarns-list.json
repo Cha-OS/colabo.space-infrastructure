@@ -1,0 +1,109 @@
+{
+    "items_array": [{
+            "key": "typescript",
+            "name": "typescript",
+            "global": true,
+            "production": false,
+            "state": "present"
+        },
+        {
+            "key": "ng-cli",
+            "name": "@angular/cli@7.1.4",
+            "global": true,
+            "production": false,
+            "state": "present"
+        },
+        {
+            "key": "colabo-tools",
+            "name": "@colabo/cli",
+            "global": true,
+            "production": false,
+            "state": "present"
+        },
+        {
+            "key": "colabo-isomorphic",
+            "comment": "build (yarn) isomorphic puzzles",
+            "name": "",
+            "global": false,
+            "path": "/var/repos/colabo/src/isomorphic",
+            "production": false,
+            "state": "present",
+            "hosts": [
+                "instances",
+                "services",
+                "litterra"
+            ]
+        },
+        {
+            "key": "colabo-backend",
+            "comment": "build (yarn) backend puzzles",
+            "name": "",
+            "global": false,
+            "path": "/var/repos/colabo/src/backend",
+            "production": false,
+            "state": "present",
+            "hosts": [
+                "instances",
+                "services",
+                "litterra"
+            ]
+        },
+        {
+            "key": "colabo-space-backend-app",
+            "name": "",
+            "global": false,
+            "path": "/var/repos/colabo/src/backend/apps/colabo-space",
+            "production": false,
+            "state": "present",
+            "hosts": [
+                "instances"
+            ]
+        },
+        {
+            "key": "colabo-services",
+            "name": "",
+            "global": false,
+            "path": "/var/repos/colabo/src/services",
+            "production": false,
+            "state": "present",
+            "hosts": [
+                "services",
+                "litterra"
+            ]
+        },
+        {
+            "key": "s-colaboflow-audit",
+            "name": "",
+            "global": false,
+            "path": "/var/repos/colabo/src/services/services/colaboflow-audit",
+            "production": false,
+            "state": "present",
+            "hosts": [
+                "services",
+                "litterra"
+            ]
+        },
+        {
+            "key": "s-colaboflow-go",
+            "name": "",
+            "global": false,
+            "path": "/var/repos/colabo/src/services/services/colaboflow-go",
+            "production": false,
+            "state": "present",
+            "hosts": [
+                "services",
+                "litterra"
+            ]
+        },
+        {
+            "key": "ghost-cli",
+            "name": "ghost-cli",
+            "global": true,
+            "production": false,
+            "state": "present",
+            "hosts": [
+                "blogs"
+            ]
+        }
+    ]
+}

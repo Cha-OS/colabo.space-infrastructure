@@ -1,0 +1,26 @@
+{
+    "items_array": [{
+        "key": "litterra",
+        "repo_https": "https://github.com/mprinc/LitTerra/",
+        "repo": "git@github.com:mprinc/LitTerra.git",
+        "key_file_pem": "~/.ssh/chaos.ngo.readonly.pem",
+        "key_file_pub": "~/.ssh/chaos.ngo.readonly.pub",
+        "dest": "/var/repos/litterra",
+        "depth": 1,
+        "force": true,
+        "recursive": true,
+        "owner": "www-data",
+        "group": "developers",
+        "mode": "ug=rwX,o=rX,g+s"
+    }, {
+        "key": "colabo",
+        "repo": "https://github.com/Cha-OS/colabo/",
+        "dest": "/var/repos/colabo",
+        "depth": 1,
+        "force": true,
+        "recursive": true,
+        "owner": "www-data",
+        "group": "developers",
+        "mode": "ug=rwX,o=rX,g+s"
+    }]
+}

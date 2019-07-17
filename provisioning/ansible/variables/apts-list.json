@@ -1,0 +1,111 @@
+{
+    "items_array": [{
+            "key": "cmdtest",
+            "comment": "we need to remove it, otherwise installing npm packages with `yarn` would fail"
+            "state": "absent"
+        },
+        {
+            "key": "joe",
+            "state": "present"
+        },
+        {
+            "key": "screen",
+            "state": "present"
+        },
+        {
+            "key": "unzip",
+            "state": "present"
+        },
+        {
+            "key": "zip",
+            "state": "present"
+        },
+        {
+            "key": "git",
+            "state": "present"
+        },
+        {
+            "key": "cowsay",
+            "state": "present"
+        },
+        {
+            "key": "fortune",
+            "state": "present"
+        },
+        {
+            "key": "wget",
+            "state": "present"
+        },
+        {
+            "key": "gcc",
+            "state": "present"
+        },
+        {
+            "key": "certbot",
+            "state": "present"
+        },
+        {
+            "key": [
+                "python",
+                "python-pip",
+                "python3",
+                "python3-pip",
+                "python3-virtualenv",
+                "python-virtualenv",
+                "virtualenv"
+            ],
+            "state": "present",
+            "_tags": [
+                "python"
+            ]
+        },
+        {
+            "key": [
+                "zlib1g-dev",
+                "augeas-doc",
+                "augeas-tools",
+                "libssl-doc",
+                "libffi-dev",
+                "libssl-dev",
+                "libssl1.1",
+                "openssl"
+            ],
+            "comment_state": "we need latest as otherwise certbot will try to install them during the automatized part of the installation (`nginx.yml`-task:Create certificate with `certbot-auto`) and crash the installation",
+            "state": "latest",
+            "_tags": [
+                "certificates"
+            ]
+        },
+        {
+            "key": [
+                "mysql-server",
+                "mysql-client",
+                "python3-pymysql",
+                "python-pymysql"
+            ],
+            "state": "present",
+            "_tags": [
+                "mysql"
+            ],
+            "hosts": [
+                "blogs",
+                "litterra"
+            ]
+        },
+        {
+            "key": [
+                "php-cli",
+                "php-cgi",
+                "php-fpm",
+                "php-zip"
+            ],
+            "state": "present",
+            "hosts": [
+                "blogs"
+            ],
+            "_tags": [
+                "php"
+            ]
+        }
+    ]
+}

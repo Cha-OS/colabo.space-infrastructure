@@ -1,0 +1,40 @@
+{
+    "items_array": [{
+            "key": "virtualenv-2",
+            "type": "pip2",
+            "package": "virtualenv",
+            "executable": "pip"
+        }, {
+            "key": "virtualenv-3",
+            "type": "pip3",
+            "package": "virtualenv",
+            "executable": "pip3"
+        }, {
+            "key": "pymongo",
+            "package": "pymongo",
+            "type": "pip23",
+            "_virtualenv": "/var/services/colabo-env-python"
+        },
+        {
+            "key": "requirements-big-packages",
+            "type": "requirements23",
+            "_virtualenv": "/var/data/litterra/python-env",
+            "requirements": "../variables/requirements-similarity.txt"
+        },
+        {
+            "key": "requirements-similarity",
+            "type": "requirements2",
+            "_virtualenv": "/var/services/colabo-env-python",
+            "requirements": "../variables/requirements-similarity.txt"
+        },
+        {
+            "key": "requirements-colaboflow",
+            "type": "requirements23",
+            "_virtualenv": "/var/services/colabo-env-python",
+            "requirements": "../variables/requirements-colaboflow.txt",
+            "hosts": [
+                "litterra"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,194 @@
+{
+    "items_array": [{
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_colabo_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_colabo_sr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_chaos_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_chaos_sr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_boradugic_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_boradugic_sr_cyr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_boradugic_sr_lat",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_savamrkalj_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_savamrkalj_sr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_retesla_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_retesla_sr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "password": "<auto-injected>",
+            "privileges": 'ghost_colabo_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_colabo_sr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_chaos_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_chaos_sr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_boradugic_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_boradugic_sr_cyr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_boradugic_sr_lat.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_savamrkalj_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_savamrkalj_sr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_retesla_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_retesla_sr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "litterra",
+            "hosts": [
+                "litterra"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "litterra_admin",
+            "privileges": 'litterra.*:ALL',
+            "hosts": [
+                "litterra"
+            ]
+        },
+        {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "litterra",
+            "privileges": 'litterra.*:ALL',
+            "hosts": [
+                "litterra"
+            ]
+        }
+    ]
+}

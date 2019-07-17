@@ -1,0 +1,111 @@
+{
+    "items_array": [{
+        "key": "ghost-chaos-en",
+        "folder": "ghost-chaos",
+        "host": "chaos.colabo.space",
+        "port": 25000,
+        "language": "en",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_chaos_en",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-chaos-sr",
+        "folder": "ghost-chaos",
+        "host": "chaos.colabo.space",
+        "port": 25001,
+        "language": "sr",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_chaos_sr",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-colabo-en",
+        "folder": "ghost-colabo",
+        "host": "colabo.colabo.space",
+        "port": 25002,
+        "language": "en",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_colabo_en",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-colabo-sr",
+        "folder": "ghost-colabo",
+        "host": "colabo.colabo.space",
+        "port": 25003,
+        "language": "sr",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_colabo_sr",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-boradugic-en",
+        "folder": "ghost-boradugic",
+        "host": "boradugic.colabo.space",
+        "port": 25004,
+        "language": "en",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_boradugic_en",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-boradugic-sr-cyr",
+        "folder": "ghost-boradugic",
+        "host": "boradugic.colabo.space",
+        "port": 25005,
+        "language": "sr-cyr",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_boradugic_sr_cyr",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-boradugic-sr-lat",
+        "folder": "ghost-boradugic",
+        "host": "boradugic.colabo.space",
+        "port": 25006,
+        "language": "sr-lat",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_boradugic_sr_lat",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-savamrkalj-sr",
+        "folder": "ghost-savamrkalj",
+        "host": "savamrkalj.colabo.space",
+        "port": 25007,
+        "language": "sr",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_savamrkalj_sr",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-savamrkalj-en",
+        "folder": "ghost-savamrkalj",
+        "host": "savamrkalj.colabo.space",
+        "port": 25008,
+        "language": "en",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_savamrkalj_en",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }]
+}

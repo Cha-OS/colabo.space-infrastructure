@@ -1,0 +1,13 @@
+[Unit]
+Description={{ item.description }}
+
+[Service]
+User={{ item.user }}
+Group={{ item.group }}
+Environment={{ item.env }}
+WorkingDirectory={{ item.working_dir }}
+ExecStart={{ item.exec_start }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

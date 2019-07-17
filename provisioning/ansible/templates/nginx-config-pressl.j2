@@ -1,0 +1,32 @@
+log_format {{ item.key }}_pressl_combined_plus '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $server_port $uri';  
+
+server { 
+  listen 80; 
+  listen [::]:80; 
+
+  server_name {{ item.host }} {{ item.aliases }};
+
+  access_log /var/log/nginx/{{ item.host }}.access.log;
+  access_log /var/log/nginx/{{ item.host }}.access.plus.log {{ item.key }}_pressl_combined_plus;
+  error_log /var/log/nginx/{{ item.host }}.error.log debug;
+
+  root /var/www/{{ item.key }};
+  index index.html;
+  autoindex on;
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+  
+  # Allow the letsencrypt ACME Challenge
+  # this is where letsencrypt will drop the callenge
+  location /.well-known/acme-challenge/ {
+    root /var/www/{{ item.certificate_reference | default(item.key) }}/letsencrypt/;
+    default_type 'text/plain';
+    allow all;
+  }
+
+  #__server_placeholder__
+}
+
+  #__host_placeholder_bottom__
