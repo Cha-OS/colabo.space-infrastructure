@@ -113,3 +113,57 @@ sudo joe /etc/cron.d/letsencrypt
 ```
 
 ***IMPORTANT***: folder `letsencrypt` should exist in the web root that you asking certificate for. Example: `/var/www/fv/letsencrypt/`
+
+# Troubleshooting
+
+## Missing command line flag or config entry for the webroot
+
+Solution: [Let’s Encrypt renewal simulation problem](https://community.letsencrypt.org/t/lets-encrypt-renewal-simulation-problem/43784/3)
+
+```txt
+Processing /etc/letsencrypt/renewal/savamrkalj.com.conf
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Cert is due for renewal, auto-renewing...
+Plugins selected: Authenticator webroot, Installer None
+Renewing an existing certificate
+Performing the following challenges:
+http-01 challenge for www.savamrkalj.com
+http-01 challenge for savamrkalj.colabo.space
+http-01 challenge for savamrkalj.com
+Cleaning up challenges
+Attempting to renew cert (savamrkalj.com) from /etc/letsencrypt/renewal/savamrkalj.com.conf produced an unexpected error: Missing command line flag or config entry for this setting:
+Select the webroot for savamrkalj.colabo.space:
+Choices: ['Enter a new webroot', '/var/www/ghost-savamrkalj/letsencrypt']
+
+(You can set this with the --webroot-path flag). Skipping.
+```
+
+Solution:
++ Open config file (`/etc/letsencrypt/renewal/savamrkalj.com.conf`) and instead of:
+
+```conf
+# Options used in the renewal process
+[renewalparams]
+authenticator = webroot
+account = 29b53809ff714d9b3d17279a89db4a32
+webroot_path = /var/www/ghost-savamrkalj/letsencrypt,
+server = https://acme-v02.api.letsencrypt.org/directory
+[[webroot_map]]
+www.savamrkalj.com = /var/www/ghost-savamrkalj/letsencrypt
+```
+
+make:
+
+```conf
+# Options used in the renewal process
+[renewalparams]
+authenticator = webroot
+account = 29b53809ff714d9b3d17279a89db4a32
+# not used anymore
+# webroot_path = /var/www/ghost-savamrkalj/letsencrypt,
+server = https://acme-v02.api.letsencrypt.org/directory
+[[webroot_map]]
+# here all domains should be covered
+savamrkalj.com = /var/www/ghost-savamrkalj/letsencrypt
+www.savamrkalj.com = /var/www/ghost-savamrkalj/letsencrypt
+```
