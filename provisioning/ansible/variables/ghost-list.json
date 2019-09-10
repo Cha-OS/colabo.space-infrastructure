@@ -107,5 +107,30 @@
             "user": "ghost",
             "password": "<auto-injected>"
         }
-    }]
+    }, {
+        "key": "ghost-retesla-en",
+        "folder": "ghost-retesla",
+        "host": "tesla.colabo.space",
+        "port": 25009,
+        "language": "en",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_retesla_en",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }, {
+        "key": "ghost-retesla-sr",
+        "folder": "ghost-retesla",
+        "host": "tesla.colabo.space",
+        "port": 25010,
+        "language": "sr",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_retesla_sr",
+            "user": "ghost",
+            "password": "<auto-injected>"
+        }
+    }
+]
 }
