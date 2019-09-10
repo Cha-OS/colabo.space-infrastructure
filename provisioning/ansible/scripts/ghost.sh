@@ -61,15 +61,6 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
 
 # Other
 
-cd /var/www
-sudo rm -r ghost-chaos/en
-sudo rm -r ghost-chaos/sr
-sudo rm -r ghost-colabo/en
-sudo rm -r ghost-colabo/sr
-sudo rm -r ghost-boradugic/en
-sudo rm -r ghost-boradugic/sr-cyr
-sudo rm -r ghost-boradugic/sr-lat
-
 cd /var/www/ghost-chaos/
 mkdir en
 cd en
@@ -100,21 +91,6 @@ sudo systemctl restart nginx
 
 # /usr/local/bin/ghost
 # /usr/bin/ghost
-
-sudo ps -ax | grep node
-# show working folder for the process
-sudo pwdx <pid>
-port:23650
-# get ports the process established/listening-to
-# https://unix.stackexchange.com/questions/278400/how-to-know-which-ports-are-listened-by-certain-pid
-sudo lsof -aPi -p <pid>
-sudo lsof -aPi -p 31256
-
-# https://www.tecmint.com/find-out-which-process-listening-on-a-particular-port/
-sudo lsof -iTCP -sTCP:LISTEN
-sudo netstat -ltnp
-sudo netstat -ltnp | grep -w ':80'
-sudo fuser 80/tcp
 
 # config
 # https://docs.ghost.org/api/ghost-cli/config/
@@ -156,13 +132,6 @@ sudo systemctl enable ghost_ghost-colabo-en.service --quiet
 
 # =======
 
-http://colabo.colabo.space/sr/
-ghost
-ghost_colabo_sr
-
-Nginx configuration already found for this url. Skipping Nginx setup.
-ℹ Setting up Nginx [skipped]
-
 ✔ Creating systemd service file at /var/www/ghost-colabo/sr/system/files/ghost_colabo-colabo-space-1.service
 + sudo ln -sf /var/www/ghost-colabo/sr/system/files/ghost_colabo-colabo-space-1.service /lib/systemd/system/ghost_colabo-colabo-space-1.service
 + sudo systemctl daemon-reload
@@ -183,37 +152,9 @@ added:
     }
 
 
-[How To Use Systemctl to Manage Systemd Services and Units](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units)
-https://www.dynacont.net/documentation/linux/Useful_SystemD_commands/
 
-sudo systemctl disable ghost_colabo-colabo-space-1
-Removed /etc/systemd/system/ghost_colabo-colabo-space-1.service
-Removed /etc/systemd/system/multi-user.target.wants/ghost_colabo-colabo-space-1.service
-
-sudo ln -sf /var/www/ghost-colabo/sr/system/files/ghost_colabo-colabo-space-sr.service /lib/systemd/system/ghost_colabo-colabo-space-sr.service
-
-sudo rm /lib/systemd/system/ghost_colabo-colabo-space-1.service
-
-systemctl list-units
-systemctl list-unit-files
-systemctl cat ghost_colabo-colabo-space-1.service
-systemctl cat ghost_colabo-colabo-space.service
-
-systemctl show ghost_colabo-colabo-space.service -p Conflicts
-
-ghost ls
-cat /var/www/ghost-colabo/en/.ghost-cli 
-cat /var/www/ghost-colabo/sr/.ghost-cli 
-cat ~/.ghost/config
 # =======
 
-
-The service running ghost is (`ps -ax | grep node`):
-`/usr/bin/node current/index.js`
-
-It has working folder (`sudo pwdx <pid>`): `/var/www/ghost-chaos/en`
-
-The ***problem*** is that there is only ONE service running and listening, for the first ghost only.
 
 location / {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

@@ -52,7 +52,7 @@
     become_user: "orchestrator"
     tags: [install]
 
-  - name: create `config.production.json` files
+  - name: Create/update `config.production.json` file from a template
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module
@@ -60,9 +60,9 @@
       src: ../templates/ghost-config.j2
       dest: "/var/www/{{item.folder}}/{{item.language}}/config.production.json"
       # force: no
-    tags: [install]
+    tags: [install, update]
 
-  - name: Set ghost content
+  - name: Create ghost `content` folder
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
@@ -75,7 +75,7 @@
       recurse: yes
     tags: [install]
   
-  - name: Set ghost root files
+  - name: Create ghost root file
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
@@ -88,7 +88,7 @@
       recurse: no
     tags: [install]
   
-  - name: CONFIG ghost
+  - name: CONFIGure the ghost (with ghost CLI command)`
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/latest/modules/command_module.html
@@ -97,11 +97,12 @@
     args:
       chdir: "/var/www/{{item.folder}}/{{item.language}}"
     become_user: "{{item.user}}"
-    tags: [install]
+    tags: [install, update]
 
   - name: report variables
     debug:
       msg: "inventory_hostname: {{inventory_hostname}}, ansible_hostname: ansible_hostname}}"
+    tags: [always]
 
   # -----------------------------------------------------
   # Loading and extending `<ghost_folder>/.ghost-cli` files
@@ -121,6 +122,7 @@
     fetch:
       src: "/var/www/{{item.folder}}/{{item.language}}/.ghost-cli"
       dest: "/tmp/fetched"
+    tags: [always]
 
   - name: load .ghost-cli from local file into local variable
     with_items: "{{ items_array }}"
@@ -129,25 +131,30 @@
       name: loaded_var
     # register: loaded_vars[item.key]
     register: loaded_vars
+    tags: [always]
 
   - name: report loaded .ghost-cli-s
     # with_items: "{{ items_array }}"
     debug:
       msg: "{{ loaded_vars }}"
       # msg: "{{ loaded_vars[item.key] }}"
+    tags: [always]
 
   - name: Clean loaded .ghost-cli-s
     set_fact:
       loaded_vars: "{{ loaded_vars | json_query('results[*].{value: ansible_facts.loaded_var, key: item.key}') }}"
+    tags: [always]
 
   - name: report loaded .ghost-cli-s (composite)
     debug:
       msg: "{{ loaded_vars }}"
+    tags: [always]
 
   - name: report loaded .ghost-cli-s (itteratively)
     with_items: "{{ loaded_vars }}"
     debug:
       msg: "{{ item }}"
+    tags: [always]
 
   - name: convert loaded .ghost-cli-s from array to dict + extending dicts
     with_items: "{{ loaded_vars }}"
@@ -161,11 +168,13 @@
           })
         })
       }}"
+    tags: [always]
 
   - name: report loaded .ghost-cli dicts
     with_items: "{{ items_array }}"
     debug:
       msg: "for key '{{ item.key }}' value: {{ loaded_vars_dict[item.key] }}"
+    tags: [always]
 
   - name: write loaded .ghost-cli-s as dict to remote file
     with_items: "{{ items_array }}"
@@ -173,6 +182,7 @@
     copy: 
       content: "{{ loaded_vars_dict[item.key] | to_nice_json }}" 
       dest: "/var/www/{{item.folder}}/{{item.language}}/.ghost-cli"
+    tags: [always]
 
   - name: Set ghost files privileges
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
@@ -181,7 +191,7 @@
     command: 'find ./ ! -path "./versions/*" -type f -exec chmod 664 {} \;'
     args:
       chdir: "/var/www/{{item.folder}}/{{item.language}}"
-    tags: [install]
+    tags: [install, update]
 
   - name: Set ghost folder privileges
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
@@ -190,15 +200,16 @@
     command: 'find ./ -type d -exec chmod 00775 {} \;'
     args:
       chdir: "/var/www/{{item.folder}}/{{item.language}}"
-    tags: [install]
+    tags: [install, update]
 
-  - name: adding user 'orchestrator' to {{item.user}} ghost
+  - name: adding the user 'orchestrator' to {{item.user}} ghost group
     with_items: "{{ items_array }}"
     # https://serverfault.com/questions/542910/adding-a-user-to-an-additional-group-using-ansible
     user:
       name: 'orchestrator'
       groups: '{{item.user}}'
       append: yes
+    tags: [install]
 
   - name: setup ghost systemd
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching

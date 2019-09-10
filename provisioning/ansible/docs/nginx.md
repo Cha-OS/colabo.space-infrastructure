@@ -9,6 +9,16 @@ Each key in the `items_array` represents the folder inside the `/var/www` that w
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/nginx.yml
 ```
 
+# Usefull
+
+```sh
+# Checking nginx config file syntax
+sudo nginx -t
+
+# Manual restart of the NGINX service:
+sudo systemctl restart nginx
+```
+
 # Examples
 
 ```json
