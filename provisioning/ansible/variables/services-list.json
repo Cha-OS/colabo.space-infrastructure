@@ -15,7 +15,10 @@
         {
             "key": "b-colabo",
             "description": "Colabo.Space Backend (node.js)",
+            "user": "www-data",
+            "group": "developers",
             "env": "",
+            "service_path": "/var/services",
             "working_dir": "/var/repos/colabo/src/backend/apps/colabo-space/dist/",
             "exec_start": "/usr/bin/nodejs /var/repos/colabo/src/backend/apps/colabo-space/dist/index.js 8001",
             "hosts": [

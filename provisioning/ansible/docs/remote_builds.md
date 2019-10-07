@@ -2,6 +2,8 @@
 
 This playbook run different sorts of remote build, mainly focusing to non-standard scenarios, where we prefer direct commands to run instead ansible modules. Therefore, each item that is run is a build command
 
+**NOTE**: There is a problem with either new MongoDB approach that has changed, or with Ubuntu 19.04. Now there are 2 json files with commands; the old one: `remote_builds-list.json` and a new one `remote_builds-list-2019.10.07-new-instructions.json` confirming with new MongoDB approach. Eventually, I (Sasha) used the old way, but running it from terminal.
+
 # TODO
 
 - Seems it makes problem when `user` is not set

@@ -37,13 +37,16 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private
 
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/yarns.yml
 
-# WARNING: this will trnsfer also built frontend
+# WARNING: this will transfer also built frontend
 # BE SURE you have RIGHT version built!
 # TODO we need to fix it
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/transfers.yml
 
+# (re)start backend service
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/services.yml
+
 # restart backend
-ssh -i ~/.ssh/sasha-iaas-no.pem  --extra-vars '{"active_hosts_groups": ["services"]}' mprinc@158.39.75.120
+ssh -i ~/.ssh/sasha-iaas-no.pem  mprinc@<host>
 
 sudo systemctl status knalledge-b
 sudo systemctl stop knalledge-b

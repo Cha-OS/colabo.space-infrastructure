@@ -1,10 +1,22 @@
 {
     "items_array": [{
-            "key": "mongodb-install-1 - Import the public key",
-            "comment": "https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/",
+            "key": "mongodb-install-1a - Import the public key - load",
             "user": "root",
             "path": "/var/services/",
-            "command": "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4",
+            "command": "wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc -O /tmp/mongodb-key.tmp",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra"
+            ]
+        }, {
+            "key": "mongodb-install-1b - Import the public key - import",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "apt-key add /tmp/mongodb-key.tmp",
             "_tags": [
                 "mongodb",
                 "install"
@@ -31,7 +43,7 @@
             "key": "mongodb-install-2 - Create a list file",
             "user": "root",
             "path": "/var/services/",
-            "command": "echo 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse' | tee /etc/apt/sources.list.d/mongodb-org-4.0.list",
+            "command": "echo 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list",
             "_tags": [
                 "mongodb",
                 "install"
