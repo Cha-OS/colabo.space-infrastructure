@@ -42,6 +42,17 @@
       # production: "{{item.production | default(false) }}" # default is false
       # state: "{{item.state | default('present') }}" # default is 'present'
 
+  - name: Remove problematic cmdtest that conflicts with yarn
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    apt:
+      name: "cmdtest"
+      state: "absent"
+
+  - name: install yarn
+    apt:
+      name: "yarn"
+      state: "present"
+
   - name: Run Yarn tools
     with_items: "{{ items_array }}"
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching

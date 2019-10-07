@@ -253,6 +253,75 @@
             "hosts": [
                 "litterra"
             ]
+        }, {
+            "key": "colabo-apps",
+            "host": "apps.colabo.space",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "ug=rwx,o=rx,g+s"
+            },
+            "certificate": {
+                "email": "chaos.ngo@gmail.com",
+                "hosts": [
+                    "apps.colabo.space",
+                    "psc.colabo.space",
+                    "psc-test.colabo.space"
+                ]
+            },
+            "extensions": [{
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "type": "api",
+                "api_path": "api",
+                "proxy_pass": "http://127.0.0.1:8001",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+        }, {
+            "key": "colabo-apps-psc",
+            "host": "psc.colabo.space",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "ug=rwx,o=rx,g+s"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+        }, {
+            "key": "colabo-apps-psc-test",
+            "host": "psc-test.colabo.space",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "ug=rwx,o=rx,g+s"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
         }
     ]
 }

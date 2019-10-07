@@ -19,7 +19,7 @@
         },
         {
             "key": "colaboflow-dashboard-frontend-config",
-            "src": "../../files/frontend/global-server.js",
+            "src": "../../../../colabo.space-infrastructure-private/provisioning/files/frontend/global-server.js",
             "dest": "/var/www/colaboflow-dashboard-frontend/config/global.js",
             "delete": false,
             "mode": "push",
@@ -37,7 +37,7 @@
         },
         {
             "key": "colaboflow-dashboard-backend-config",
-            "src": "../../files/backend/global-server.js",
+            "src": "../../../../colabo.space-infrastructure-private/provisioning/files/backend/global-server.js",
             "dest": "/var/repos/litterra/src/backend/apps/colaboflow_dashboard/dist/config/global.js",
             "dest_folder_create": "/var/repos/litterra/src/backend/apps/colaboflow_dashboard/dist/config/",
             "delete": false,
@@ -56,7 +56,7 @@
         },
         {
             "key": "service-go-config",
-            "src": "../../files/services/flow/go/global-server.js",
+            "src": "../../../../colabo.space-infrastructure-private/provisioning/files/services/flow/go/global-server.js",
             "dest": "/var/repos/colabo/src/services/services/colaboflow-go/dist/config/global.js",
             "dest_folder_create": "/var/repos/colabo/src/services/services/colaboflow-go/dist/config/",
             "delete": false,
@@ -112,7 +112,7 @@
         {
             "key": "colabo-frontend",
             "src": "../../../../colabo/src/frontend/apps/psc/dist/performing_sustainable_coevolution/",
-            "dest": "/var/www/fv/",
+            "dest": "/var/www/colabo-apps-psc/",
             "delete": true,
             "mode": "push",
             "recursive": true,
@@ -130,8 +130,8 @@
         },
         {
             "key": "colabo-frontend-config",
-            "src": "../../files/frontend/global-server.js",
-            "dest": "/var/www/fv/config/global.js",
+            "src": "../../../../colabo.space-infrastructure-private/provisioning/files/frontend/global-server.js",
+            "dest": "/var/www/colabo-apps-psc/config/global.js",
             "delete": false,
             "mode": "push",
             "recursive": false,
@@ -149,7 +149,7 @@
         },
         {
             "key": "colabo-backend-config",
-            "src": "../../files/backend/global-server.js",
+            "src": "../../../../colabo.space-infrastructure-private/provisioning/files/backend/global-server.js",
             "dest": "/var/repos/colabo/src/backend/apps/colabo-space/dist/config/global.js",
             "delete": false,
             "mode": "push",

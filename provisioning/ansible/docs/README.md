@@ -14,6 +14,16 @@ with
 when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
 ```
 
+# Installing server before first time deploying
+
++ users.yml
++ init.yml
++ apts.yml
++ remote_builds.yml
++ nginx.yml
++ node.yml
++ python.yml
+
 # Deploying short
 
 ## Backend
@@ -30,7 +40,7 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private
 # WARNING: this will trnsfer also built frontend
 # BE SURE you have RIGHT version built!
 # TODO we need to fix it
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/transfer.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/transfers.yml
 
 # restart backend
 ssh -i ~/.ssh/sasha-iaas-no.pem  --extra-vars '{"active_hosts_groups": ["services"]}' mprinc@158.39.75.120
@@ -65,9 +75,11 @@ yarn
 colabo/src/frontend/apps/psc
 yarn
 
+cd colabo.space/colabo.space-infrastructure/provisioning/ansible
+
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/local_builds.yml
 
-# WARNING: this will trnsfer also backend
+# WARNING: this will transfer also backend
 # BE SURE you have RIGHT version built!
 # TODO we need to fix it
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/transfers.yml
@@ -216,10 +228,10 @@ This playbook creates all users in the cluster, sets up their privileges, creden
 
 ```sh
 # real
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/users.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ubuntu' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/users.yml
 
 # just checking
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key --check ~/.ssh/orchestratio-iaas-no.pem  --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/users.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ubuntu' --private-key --check ~/.ssh/orchestratio-iaas-no.pem  --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/users.yml
 
 # Evaluate
 ls -al /home
@@ -262,6 +274,22 @@ git --version
 python --version
 python3 --version
 ```
+
+## remote builds
+
+This playbook run different sorts of remote build, mainly focusing to non-standard scenarios, where we prefer direct commands to run instead ansible modules. Therefore, each item that is run is a build command
+
+```sh
+# real
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/remote_builds.yml
+
+# just checking
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key --check ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/remote_builds.yml
+
+# evaluate
+nginx -v
+```
+
 
 ## nginx
 
@@ -337,11 +365,6 @@ ls -al /var/services/colabo-env-python2/bin
 ls -al /var/services/colabo-env-python3/bin
 ```
 
-## remote builds
-
-This playbook run different sorts of remote build, mainly focusing to non-standard scenarios, where we prefer direct commands to run instead ansible modules. Therefore, each item that is run is a build command
-
-
 ## local_builds
 
 This playbook builds projects localy
@@ -351,7 +374,7 @@ This playbook builds projects localy
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/local_builds.yml
 
 # just checking
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key --check ~/.ssh/orchestratio-iaas-no.pem  --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/local_builds.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --check --private-key ~/.ssh/orchestratio-iaas-no.pem  --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/local_builds.yml
 
 # evaluate
 # NOTE: on local machine
@@ -450,3 +473,86 @@ Or navigate browser to: http://playsound.colabo.space/api/search-sounds/bird
 ## Frontend
 
 Navigate browser to http://playsound.colabo.space
+
+# Troubleshooting
+
+## apt-get update
+
+### the public key is not available
+
+https://chrisjean.com/fix-apt-get-update-the-following-signatures-couldnt-be-verified-because-the-public-key-is-not-available/
+
+### The following signatures were invalid: EXPKEYSIG 58712A2291FA4AD5 MongoDB 3.6 Release
+
+https://stackoverflow.com/questions/34733340/mongodb-gpg-invalid-signatures
+
+Run `apt-key list`. Search for expired. Like this one
+
+```txt
+pub   rsa2048 2015-04-03 [SCEA] [expired: 2018-04-02]
+      D0BC 747F D8CA F711 7500  D6FA 3746 C208 A731 7B0F
+uid           [ expired] Google Cloud Packages Automatic Signing Key <gc-team@google.com>
+```
+
+Run
+
+```sh
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys D0BC747FD8CAF7117500D6FA3746C208A7317B0F
+```
+
+to replace the key
+
+### 404  Not Found
+
+Error like:
+
+```txt
+Ign:9 http://osl-default-1.clouds.archive.ubuntu.com/ubuntu artful-updates InRelease
+Err:10 http://security.ubuntu.com/ubuntu artful-security Release          
+  404  Not Found [IP: 91.189.88.173 80]
+```
+
+https://futurestud.io/tutorials/how-to-fix-ubuntu-debian-apt-get-404-not-found-repository-errors
+
+```sh
+sudo sed -i -e 's/archive.ubuntu.com\|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list
+sudo apt-get dist-upgrade
+```
+
+https://askubuntu.com/questions/549777/getting-404-not-found-errors-when-doing-sudo-apt-get-update
+
+# Loging in issues
+
+## Warning: the ECDSA host key for 'xxx' differs from the key for the IP address 'yyy'
+
+https://superuser.com/questions/421004/how-to-fix-warning-about-ecdsa-host-key
+
+```sh
+ssh-keygen -R <IP>
+```
+
+## WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!
+
+```Offending ECDSA key in /Users/sasha/.ssh/known_hosts:55```
+
++ If **YOU** changed server, reinstalled, etc, than you should fix it
++ Otherwise it could be the **man-in-the-middle attack**!!!
+
+```sh
+ssh-keyscan -t ecdsa psc-test.colabo.space >> ~/.ssh/known_hosts
+```
+
+# Updating distro
+
+It is important to keep it updated, as we might have problems with migrated keys, repositories, etc
+We can read warnings ubuntu gives us on loging in
+
+```sh
+# showinf current release
+lsb_release -a
+
+# updating/upgrading distribution
+sudo apt-get dist-upgrade
+
+# updating packages
+sudo apt-get update

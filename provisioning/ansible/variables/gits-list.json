@@ -11,7 +11,10 @@
         "recursive": true,
         "owner": "www-data",
         "group": "developers",
-        "mode": "ug=rwX,o=rX,g+s"
+        "mode": "ug=rwX,o=rX,g+s",
+        "hosts": [
+            "litterra"
+        ]
     }, {
         "key": "colabo",
         "repo": "https://github.com/Cha-OS/colabo/",
@@ -21,6 +24,10 @@
         "recursive": true,
         "owner": "www-data",
         "group": "developers",
-        "mode": "ug=rwX,o=rX,g+s"
+        "mode": "ug=rwX,o=rX,g+s",
+        "hosts": [
+            "instances",
+            "litterra"
+        ]
     }]
 }

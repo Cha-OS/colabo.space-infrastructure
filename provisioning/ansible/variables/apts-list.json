@@ -1,7 +1,7 @@
 {
     "items_array": [{
             "key": "cmdtest",
-            "comment": "we need to remove it, otherwise installing npm packages with `yarn` would fail"
+            "comment": "we need to remove it, otherwise installing npm packages with `yarn` would fail",
             "state": "absent"
         },
         {

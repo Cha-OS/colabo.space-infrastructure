@@ -2,6 +2,11 @@
 
 This playbook installs node, build tools and yarn
 
+# TODO
+
+Forbid installing problematic cmdtools:
++ https://askubuntu.com/questions/75895/how-to-forbid-a-specific-package-to-be-installed
+
 # Run
 
 ```sh

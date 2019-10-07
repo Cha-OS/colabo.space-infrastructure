@@ -62,6 +62,11 @@
       name: "gcc,g++,make"
       state: "present"
 
+  - name: install npm
+    apt:
+      name: "npm"
+      state: "present"
+
   # repeated many times as noticed that after the first time it still installs cmdtest?!
   - name: remove cmdtest (conflicting with yarn, as having tool yarn as well)
     apt:

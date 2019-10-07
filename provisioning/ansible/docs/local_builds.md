@@ -8,8 +8,17 @@ Currently, it supports:
 
 # Run
 
+First you need to set the proper JSON file.
+
+There are few now:
+
++ local_builds-list-litterra.json
++ local_builds-list-psc.json
+
+rename one of them into `local_builds-list.json`
+
 ```sh
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/gits.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/local_builds.yml
 ```
 
 # Examples

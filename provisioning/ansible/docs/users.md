@@ -4,8 +4,10 @@ This playbook creates users at the level of the operating system.
 
 # Run
 
+**NOTE**: We use the `ubuntu` user here, since no other users exist yet.
+
 ```sh
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/users.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ubuntu' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/users.yml
 ```
 
 # Examples

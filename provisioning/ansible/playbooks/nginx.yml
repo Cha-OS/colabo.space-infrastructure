@@ -84,7 +84,7 @@
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
     file:
       path: '/etc/nginx/letsencrypt/certbot-auto'
-      state: 'file'
+      state: 'touch'
       owner: 'root'
       group: 'root'
       mode: '0755'

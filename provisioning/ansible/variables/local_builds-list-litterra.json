@@ -1,0 +1,10 @@
+{
+    "items_array": [{
+        "key": "colaboflow-dashboard",
+        "path": "../../../../../LitTerra/frontend/apps/colaboflow_dashboard/",
+        "basehref": "/dashboard/",
+        "hosts": [
+            "litterra"
+        ]
+    }]
+}

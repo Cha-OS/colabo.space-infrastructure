@@ -55,7 +55,9 @@
             "group": "developers",
             "mode": "ug=rwx,o=rx,g+s",
             "hosts": [
-                "litterra"
+                "litterra",
+                "instances",
+                "services"
             ]
         },
         {

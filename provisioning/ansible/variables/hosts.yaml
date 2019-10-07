@@ -9,8 +9,11 @@ orchestrators:
 
 instances:
   hosts:
-    instance-1:
-        ansible_host: 158.39.75.120
+    # instance-1:
+    #     ansible_host: 158.39.75.120
+    #     ansible_python_interpreter: /usr/bin/python3
+    colabo.space-apps-1:
+        ansible_host: 158.39.75.119
         ansible_python_interpreter: /usr/bin/python3
 
 blogs:
