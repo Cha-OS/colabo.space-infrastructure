@@ -30,20 +30,26 @@ when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.h
 
 ```sh
 
+# position yourself to the correct colabo.space repo folder
+cd colabo/colabo.space
+
 git pull
 git push
 
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/gits.yml
+# position yourself to the correct ansible folder
+cd colabo/colabo.space-infrastructure/provisioning/ansible
 
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/yarns.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/gits.yml
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/yarns.yml
 
 # WARNING: this will transfer also built frontend
 # BE SURE you have RIGHT version built!
 # TODO we need to fix it
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/transfers.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/transfers.yml
 
 # (re)start backend service
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/services.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/services.yml
 
 # restart backend
 ssh -i ~/.ssh/sasha-iaas-no.pem  mprinc@<host>
@@ -64,6 +70,9 @@ ps -ax | grep node
 
 ```sh
 
+# position yourself to the correct colabo.space repo folder
+cd colabo/colabo.space
+
 git pull
 
 # if necessary, but still better every time
@@ -78,14 +87,15 @@ yarn
 colabo/src/frontend/apps/psc
 yarn
 
-cd colabo.space/colabo.space-infrastructure/provisioning/ansible
+# position yourself to the correct ansible folder
+cd colabo/colabo.space-infrastructure/provisioning/ansible
 
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/local_builds.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/local_builds.yml
 
 # WARNING: this will transfer also backend
 # BE SURE you have RIGHT version built!
 # TODO we need to fix it
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/transfers.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/transfers.yml
 ```
 ## Services
 
