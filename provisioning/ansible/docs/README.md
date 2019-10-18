@@ -569,3 +569,34 @@ sudo apt-get dist-upgrade
 
 # updating packages
 sudo apt-get update
+```
+
+# ColaboFlow
+
+## SDGs
+
+Transfer json SDG files to `/var/www_data/LitTerra/content/gutenberg/services/temp_data` on LitTerra (158.39.75.130)
+
+```sh
+# use your credentials
+ssh -i ~/.ssh/sasha-iaas-no.pem mprinc@158.39.75.130
+
+cd /var/data/litterra
+source python-env3/bin/activate
+cd /var/www_data/LitTerra/content/gutenberg/services
+ps aux | grep py #ubijam staru verziju similarity_task.py
+kill -9 6273
+nohup python similarity_task.py & #startujem servis
+top #gledm da python padne sa 100+%, znaci da je ucitao model, i tek onda testiram sv_client
+
+python sv_client.py temp_data/sdg-cluster-in.json 3 'sdg'
+python sv_client.py temp_data/sdg-cluster-in.json 3 'sdg' > temp_data/sdg-cluster-out.json
+cat temp_data/sdgsSelectionsTestOutput.json
+
+python sv_client.py temp_data/sdgsSelectionsTestInput.json 3 'sdg'
+python sv_client.py temp_data/sdgsSelectionsTestInput.json 3 'sdg' > temp_data/sdgsSelectionsTestOutput.json
+cat temp_data/sdg-cluster-out.json
+
+python sv_client.py sdgsSelectionsTestInput.json 3 'sdg'
+python sv_client.py sdgsSelectionsTestInput.json 3 'sdg' 1
+```

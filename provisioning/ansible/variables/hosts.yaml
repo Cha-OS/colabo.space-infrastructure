@@ -1,12 +1,14 @@
 # Usually placed in `/etc/ansible/hosts` 
 # or invited with explicit `-i` CLI parameter
 
+# Used to orchestrate services
 orchestrators:
   hosts:
     orchestrator-1:
         ansible_host: 158.39.75.31
         ansible_port: 22
 
+# Used to run colabo.space apps
 instances:
   hosts:
     # instance-1:
@@ -16,18 +18,21 @@ instances:
         ansible_host: 158.39.75.119
         ansible_python_interpreter: /usr/bin/python3
 
+# Used to run blogs (mostly ghost)
 blogs:
   hosts:
     blog-1:
         ansible_host: 158.37.63.168
         ansible_python_interpreter: /usr/bin/python3
 
+# Used to run time demanding backend services
 services:
   hosts:
     service-1:
         ansible_host: 158.39.75.130
         ansible_python_interpreter: /usr/bin/python3
 
+# Used to run DH (litterra, bukvik, ...) sites, services, etc
 litterra:
   hosts:
     litterra-1:
