@@ -267,7 +267,8 @@
                 "hosts": [
                     "apps.colabo.space",
                     "psc.colabo.space",
-                    "psc-test.colabo.space"
+                    "psc-test.colabo.space",
+                    "manager.colabo.space"
                 ]
             },
             "extensions": [{
@@ -306,6 +307,25 @@
         }, {
             "key": "colabo-apps-psc-test",
             "host": "psc-test.colabo.space",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "ug=rwx,o=rx,g+s"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+        }, {
+            "key": "colabo-apps-manager",
+            "host": "manager.colabo.space",
             "aliases": "",
             "web_root": {
                 "owner": "www-data",
