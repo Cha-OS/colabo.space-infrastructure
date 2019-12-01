@@ -54,11 +54,11 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private
 # restart backend
 ssh -i ~/.ssh/sasha-iaas-no.pem  mprinc@<host>
 
-sudo systemctl status knalledge-b
-sudo systemctl stop knalledge-b
-sudo systemctl status knalledge-b
-sudo systemctl start knalledge-b
-sudo systemctl status knalledge-b
+sudo systemctl status b-colabo
+sudo systemctl stop b-colabo
+sudo systemctl status b-colabo
+sudo systemctl start b-colabo
+sudo systemctl status b-colabo
 
 ps -ax | grep node
 
