@@ -126,20 +126,6 @@
       "file_state": "file",
       "_tags": ["backend"],
       "hosts": ["instances", "_litterra"]
-    },
-    {
-      "key": "colabo-backend-knalledge-core-templates",
-      "src": "../../../../colabo/src/backend/dev_puzzles/knalledge/core/templates/",
-      "dest": "/var/repos/colabo/src/backend/dev_puzzles/knalledge/core/dist/templates/",
-      "delete": true,
-      "mode": "push",
-      "recursive": true,
-      "file_owner": "www-data",
-      "file_group": "developers",
-      "file_mode": "ug=rwX,o=rX,g+s",
-      "file_state": "directory",
-      "_tags": ["backend"],
-      "hosts": ["instances", "_litterra"]
     }
   ]
 }
