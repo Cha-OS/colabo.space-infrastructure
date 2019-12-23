@@ -18,6 +18,7 @@
     }, {
         "key": "colabo",
         "repo": "https://github.com/Cha-OS/colabo/",
+        "version": "play-sustainability-core",
         "dest": "/var/repos/colabo",
         "depth": 1,
         "force": true,

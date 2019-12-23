@@ -24,6 +24,37 @@ when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.h
 + node.yml
 + python.yml
 
+# Deploying slim
+
+```sh
+# backend
+
+# !!!WARNING!!!! SAVE IMAGES FROM QUESTS!!!!
+# backup
+cp -r /var/www/colabo-apps-psc/images/playsust/* /var/www/colabo-apps-psc-images/playsust
+# check
+ls /var/www/colabo-apps-psc-images/playsust
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/gits.yml
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/yarns.yml
+
+# frontend
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/local_builds.yml
+
+# !!!WARNING!!!! SAVE IMAGES FROM QUESTS!!!!
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/transfers.yml
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/services.yml
+
+```
+
+Restoring images
+```sh
+cp -r /var/www/colabo-apps-psc-images/playsust/* /var/www/colabo-apps-psc/images/playsust/
+cp -r /var/www/colabo-apps-psc-images/playsust/ /var/www/colabo-apps-psc/images/
+```
+
 # Deploying short
 
 ## Backend
@@ -43,9 +74,13 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private
 
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/yarns.yml
 
+# !!!WARNING!!!! SAVE IMAGES FROM QUESTS!!!!
+
 # WARNING: this will transfer also built frontend
 # BE SURE you have RIGHT version built!
 # TODO we need to fix it
+
+# !!!WARNING!!!! SAVE IMAGES FROM QUESTS!!!!
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/transfers.yml
 
 # (re)start backend service
@@ -57,6 +92,7 @@ ssh -i ~/.ssh/sasha-iaas-no.pem  mprinc@<host>
 sudo systemctl status b-colabo
 sudo systemctl stop b-colabo
 sudo systemctl status b-colabo
+sudo systemctl restart b-colabo
 sudo systemctl start b-colabo
 sudo systemctl status b-colabo
 
@@ -92,9 +128,13 @@ cd colabo/colabo.space-infrastructure/provisioning/ansible
 
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/local_builds.yml
 
+# !!!WARNING!!!! SAVE IMAGES FROM QUESTS!!!!
+
 # WARNING: this will transfer also backend
 # BE SURE you have RIGHT version built!
 # TODO we need to fix it
+
+# !!!WARNING!!!! SAVE IMAGES FROM QUESTS!!!!
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/transfers.yml
 ```
 ## Services
