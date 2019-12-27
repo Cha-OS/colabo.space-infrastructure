@@ -31,9 +31,15 @@ when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.h
 
 # !!!WARNING!!!! SAVE IMAGES FROM QUESTS!!!!
 # backup
+
 cp -r /var/www/colabo-apps-psc/images/playsust/* /var/www/colabo-apps-psc-images/playsust
 # check
 ls /var/www/colabo-apps-psc-images/playsust
+
+# generate separate zip of the backup 
+zip -r /var/www/colabo-apps-psc-images/playsust-`date +%Y.%m.%d_%H.%M.%S`.zip /var/www/colabo-apps-psc-images/playsust
+ls -hal /var/www/colabo-apps-psc-images/
+
 
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/gits.yml
 
@@ -51,8 +57,9 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private
 
 Restoring images
 ```sh
+mkdir -p /var/www/colabo-apps-psc/images/playsust/
 cp -r /var/www/colabo-apps-psc-images/playsust/* /var/www/colabo-apps-psc/images/playsust/
-cp -r /var/www/colabo-apps-psc-images/playsust/ /var/www/colabo-apps-psc/images/
+ls /var/www/colabo-apps-psc/images/playsust/
 ```
 
 # Deploying short
@@ -68,7 +75,7 @@ git pull
 git push
 
 # position yourself to the correct ansible folder
-cd colabo/colabo.space-infrastructure/provisioning/ansible
+cd colabo/colabo.space-infrastructure/provisioning/ansible0
 
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/gits.yml
 
