@@ -14,10 +14,6 @@ server {
   index index.html;
   autoindex on;
 
-  location / {
-    try_files $uri $uri/ /index.html;
-  }
-  
   # Allow the letsencrypt ACME Challenge
   # this is where letsencrypt will drop the callenge
   location /.well-known/acme-challenge/ {

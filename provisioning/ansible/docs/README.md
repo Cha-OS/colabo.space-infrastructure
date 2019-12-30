@@ -40,7 +40,6 @@ ls /var/www/colabo-apps-psc-images/playsust
 zip -r /var/www/colabo-apps-psc-images/playsust-`date +%Y.%m.%d_%H.%M.%S`.zip /var/www/colabo-apps-psc-images/playsust
 ls -hal /var/www/colabo-apps-psc-images/
 
-
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/gits.yml
 
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/yarns.yml

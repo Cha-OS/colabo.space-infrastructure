@@ -77,6 +77,34 @@
                 "blogs"
             ]
         }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_mprinc_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_mprinc_sr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_litterra_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_litterra_sr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
             "key": "user",
             "type": "mysql.user",
             "name": "ghost",
@@ -162,6 +190,38 @@
             "type": "mysql.user",
             "name": "ghost",
             "privileges": 'ghost_retesla_sr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_mprinc_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_mprinc_sr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_litterra_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_litterra_sr.*:ALL',
             "hosts": [
                 "blogs"
             ]

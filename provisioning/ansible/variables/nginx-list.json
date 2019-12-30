@@ -1,12 +1,13 @@
 {
-    "items_array": [{
+    "items_array": [
+        {
             "key": "ghost-chaos",
             "host": "cha-os.org",
             "aliases": "www.cha-os.org",
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
@@ -22,6 +23,7 @@
                 }, {
                     "key": "ghost-en",
                     "type": "ghost",
+                    "main": true,
                     "placeholder": "server_placeholder",
                     "language": "en",
                     "port": 25000
@@ -37,8 +39,8 @@
                     "key": "ghost-redirect",
                     "type": "redirect",
                     "placeholder": "server_placeholder",
-                    "from": "(.+)",
-                    "to": "en/$1"
+                    "from": "^/(?!(en|sr))",
+                    "to": "/en$request_uri"
                 }
             ],
             "hosts": [
@@ -51,7 +53,7 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
@@ -67,6 +69,7 @@
             }, {
                 "key": "ghost-en",
                 "type": "ghost",
+                "main": true,
                 "placeholder": "server_placeholder",
                 "language": "en",
                 "port": 25002
@@ -76,6 +79,13 @@
                 "placeholder": "server_placeholder",
                 "language": "sr",
                 "port": 25003
+            },
+            {
+                "key": "ghost-redirect",
+                "type": "redirect",
+                "placeholder": "server_placeholder",
+                "from": "^/(?!(en|sr))",
+                "to": "/en$request_uri"
             }],
             "hosts": [
                 "blogs"
@@ -87,7 +97,7 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
@@ -130,7 +140,7 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
@@ -151,9 +161,17 @@
                 {
                     "key": "ghost-sr",
                     "type": "ghost",
+                    "main": true,
                     "placeholder": "server_placeholder",
                     "language": "sr",
                     "port": 25007
+                },
+                {
+                    "key": "ghost-redirect",
+                    "type": "redirect",
+                    "placeholder": "server_placeholder",
+                    "from": "^/(?!(en|sr))",
+                    "to": "/sr$request_uri"
                 }
             ],
             "hosts": [
@@ -167,7 +185,7 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
@@ -183,6 +201,7 @@
                 {
                     "key": "ghost-en",
                     "type": "ghost",
+                    "main": true,
                     "placeholder": "server_placeholder",
                     "language": "en",
                     "port": 25009
@@ -193,20 +212,70 @@
                     "placeholder": "server_placeholder",
                     "language": "sr",
                     "port": 25010
+                },
+                {
+                    "key": "ghost-redirect",
+                    "type": "redirect",
+                    "placeholder": "server_placeholder",
+                    "from": "^/(?!(en|sr))",
+                    "to": "/en$request_uri"
                 }
             ],
             "hosts": [
                 "blogs"
             ]
-        },
-        {
+        }, {
+            "key": "ghost-mprinc",
+            "host": "sasarudan.com",
+            "aliases": "www.sasarudan.com",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate": {
+                "email": "chaos.ngo@gmail.com",
+                "hosts": [
+                    "sasarudan.com",
+                    "www.sasarudan.com"
+                ]
+            },
+            "extensions": [{
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "ghost-en",
+                "type": "ghost",
+                "placeholder": "server_placeholder",
+                "language": "en",
+                "port": 25011
+            }, {
+                "key": "ghost-sr",
+                "type": "ghost",
+                "main": true,
+                "placeholder": "server_placeholder",
+                "language": "sr",
+                "port": 25012
+            },
+            {
+                "key": "ghost-redirect",
+                "type": "redirect",
+                "placeholder": "server_placeholder",
+                "from": "^/(?!(en|sr))",
+                "to": "/sr$request_uri"
+            }],
+            "hosts": [
+                "blogs"
+            ]
+        }, {
             "key": "litterra",
             "host": "litterra.net",
             "aliases": "www.litterra.net litterra.info www.litterra.info",
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
@@ -220,6 +289,10 @@
                 ]
             },
             "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
                 "key": "api",
                 "api_path": "api",
                 "type": "api",
@@ -241,11 +314,15 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate_comment": "realized through litterra website certificate",
             "certificate_reference": "litterra",
             "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
                 "key": "well-known",
                 "type": "well-known",
                 "placeholder": "server_placeholder"
@@ -254,13 +331,56 @@
                 "litterra"
             ]
         }, {
+            "key": "ghost-litterra",
+            "host": "blog.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate": {
+                "email": "chaos.ngo@gmail.com",
+                "hosts": [
+                    "blog.litterra.net"
+                ]
+            },
+            "extensions": [{
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "ghost-en",
+                "type": "ghost",
+                "main": true,
+                "placeholder": "server_placeholder",
+                "language": "en",
+                "port": 25013
+            }, {
+                "key": "ghost-sr",
+                "type": "ghost",
+                "placeholder": "server_placeholder",
+                "language": "sr",
+                "port": 25014
+            },
+            {
+                "key": "ghost-redirect",
+                "type": "redirect",
+                "placeholder": "server_placeholder",
+                "from": "^/(?!(en|sr))",
+                "to": "/sr$request_uri"
+            }],
+            "hosts": [
+                "blogs"
+            ]
+        }, {
             "key": "colabo-apps",
             "host": "apps.colabo.space",
             "aliases": "",
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
@@ -272,6 +392,10 @@
                 ]
             },
             "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
                 "key": "well-known",
                 "type": "well-known",
                 "placeholder": "server_placeholder"
@@ -292,11 +416,15 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate_comment": "realized through colabo-apps website certificate",
             "certificate_reference": "colabo-apps",
             "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
                 "key": "well-known",
                 "type": "well-known",
                 "placeholder": "server_placeholder"
@@ -311,11 +439,15 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate_comment": "realized through colabo-apps website certificate",
             "certificate_reference": "colabo-apps",
             "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
                 "key": "well-known",
                 "type": "well-known",
                 "placeholder": "server_placeholder"
@@ -330,11 +462,15 @@
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
-                "mode": "ug=rwx,o=rx,g+s"
+                "mode": "u=rwx,g=rwxs,o=rx"
             },
             "certificate_comment": "realized through colabo-apps website certificate",
             "certificate_reference": "colabo-apps",
             "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
                 "key": "well-known",
                 "type": "well-known",
                 "placeholder": "server_placeholder"

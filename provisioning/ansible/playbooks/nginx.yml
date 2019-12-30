@@ -217,6 +217,13 @@
       state: restarted
     tags: [create_host, create_ssl]
 
+  - name: Debugging `certbot-auto` command
+    when: "{{ (item.certificate is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
+    with_items: "{{ items_array }}"
+    debug:
+      msg: './certbot-auto certonly -n --expand --agree-tos -m {{ item.certificate.email }} --webroot -w /var/www/{{ item.key }}/letsencrypt --cert-name {{ item.key }} -d {{ item.certificate.hosts | join(" -d ") }}'
+    tags: [create_host, create_ssl]
+
   - name: Create certificate with `certbot-auto`
     when: "{{ (item.certificate is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
     with_items: "{{ items_array }}"
@@ -227,7 +234,7 @@
     # `--cert-name` sets the name under the `/etc/letsencrypt/live/` where the certificates will be stored
     # + https://community.letsencrypt.org/t/trying-to-specify-the-cert-storage-location-and-failing/40698
     # + https://github.com/certbot/certbot/issues/2128
-    command: ./certbot-auto certonly --expand --agree-tos -m {{ item.certificate.email }} --webroot -w /var/www/{{ item.key }}/letsencrypt --cert-name {{ item.key }} -d {{ item.certificate.hosts | join(" -d ") }}
+    command: ./certbot-auto certonly -n --expand --agree-tos -m {{ item.certificate.email }} --webroot -w /var/www/{{ item.key }}/letsencrypt --cert-name {{ item.key }} -d {{ item.certificate.hosts | join(" -d ") }}
     # command: ./certbot-auto certonly --agree-tos -m {{ item.certificate.email }} --no-bootstrap --webroot -w /var/www/{{ item.key }}/letsencrypt -d {{ item.certificate.hosts | join(" -d ") }}
     args:
       chdir: "/etc/nginx/letsencrypt"

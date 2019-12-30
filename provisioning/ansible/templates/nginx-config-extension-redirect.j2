@@ -1,13 +1,16 @@
 # redirect extension
+
+# `location ~` is a regular expression
 location ~ "{{item.1.from}}" {
     # redirecs from `{{item.1.from}}` to `{{item.1.to}}`
     # (please see it the `url` in the `ghost-config.j2`)
     # rewrite "/{{ item.1.from }}/(.*)" "{{item.1.to}}/$1"  break;
 
    # rewrite ^{{item.1.from}}(.*) {{item.1.to}}$1 permanent;
-   rewrite ^ {{item.1.to}};
+   rewrite ^ {{item.1.to}} redirect;
 }
 
-location / {
-  try_files $uri en/$uri /en/home;
-}
+#I think this is wrong and unecessary
+#location / {
+#  try_files $uri en/$uri /en/home;
+#}

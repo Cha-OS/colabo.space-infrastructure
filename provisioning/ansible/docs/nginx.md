@@ -112,18 +112,21 @@ There are various extensions that are supporting particular use cases with build
 {
     "key": "ghost-en",
     "type": "ghost",
+    // should be redirected to from the default page (ie. http://colabo.space -> https://colabo.space/en/home)
+    "main": true,
     "placeholder": "server_placeholder",
     "language": "en",
     "port": 25000
 },
 
 // `redirect` extension is used to provide support for redirection of urls (deeplinks) in NGINX supported websites
+// redirects any link that is not starting with language prefix (so either /en* or /sr* in this case) to the same link prefixed with the default lanugage (/sr in this case)
 {
     "key": "ghost-redirect",
     "type": "redirect",
     "placeholder": "server_placeholder",
-    "from": "(.+)",
-    "to": "en/$1"
+    "from": "^/(?!(en|sr))",
+    "to": "/sr$request_uri"
 },
 
 // `api` extension is used to provide support for api (redirecting, proxying, passing/forwarding to the port, ...)

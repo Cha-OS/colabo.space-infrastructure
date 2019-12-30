@@ -9,7 +9,7 @@
         "database": {
             "db": "ghost_chaos_en",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-chaos-sr",
@@ -21,7 +21,7 @@
         "database": {
             "db": "ghost_chaos_sr",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-colabo-en",
@@ -33,7 +33,7 @@
         "database": {
             "db": "ghost_colabo_en",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-colabo-sr",
@@ -45,7 +45,7 @@
         "database": {
             "db": "ghost_colabo_sr",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-boradugic-en",
@@ -57,7 +57,7 @@
         "database": {
             "db": "ghost_boradugic_en",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-boradugic-sr-cyr",
@@ -69,7 +69,7 @@
         "database": {
             "db": "ghost_boradugic_sr_cyr",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-boradugic-sr-lat",
@@ -81,7 +81,7 @@
         "database": {
             "db": "ghost_boradugic_sr_lat",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-savamrkalj-sr",
@@ -93,7 +93,7 @@
         "database": {
             "db": "ghost_savamrkalj_sr",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-savamrkalj-en",
@@ -105,7 +105,7 @@
         "database": {
             "db": "ghost_savamrkalj_en",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-retesla-en",
@@ -117,7 +117,7 @@
         "database": {
             "db": "ghost_retesla_en",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
     }, {
         "key": "ghost-retesla-sr",
@@ -129,8 +129,55 @@
         "database": {
             "db": "ghost_retesla_sr",
             "user": "ghost",
-            "password": "<auto-injected>"
+            "password": "<password_placeholder>"
         }
-    }
-]
+    }, {
+        "key": "ghost-mprinc-en",
+        "folder": "ghost-mprinc",
+        "host": "sasarudan.com",
+        "port": 25011,
+        "language": "en",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_mprinc_en",
+            "user": "ghost",
+            "password": "<password_placeholder>"
+        }
+    }, {
+        "key": "ghost-mprinc-sr",
+        "folder": "ghost-mprinc",
+        "host": "sasarudan.com",
+        "port": 25012,
+        "language": "sr",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_mprinc_sr",
+            "user": "ghost",
+            "password": "<password_placeholder>"
+        }
+    }, {
+        "key": "ghost-litterra-en",
+        "folder": "ghost-litterra",
+        "host": "blog.litterra.net",
+        "port": 25013,
+        "language": "en",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_litterra_en",
+            "user": "ghost",
+            "password": "<password_placeholder>"
+        }
+    }, {
+        "key": "ghost-litterra-sr",
+        "folder": "ghost-litterra",
+        "host": "blog.litterra.net",
+        "port": 25014,
+        "language": "sr",
+        "user": "ghost",
+        "database": {
+            "db": "ghost_litterra_sr",
+            "user": "ghost",
+            "password": "<password_placeholder>"
+        }
+    }]
 }

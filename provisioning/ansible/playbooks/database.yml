@@ -10,9 +10,9 @@
 # sudo chown mysql:mysql /var/run/mysqld
 # sudo mysqld --skip-grant-tables --user=mysql &
 ## select Host, user, authentication_string, password_expired, password_last_changed, password_lifetime, account_locked from user;
-## not working well: mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '&5py}h#Vwuq3+P^j'; FLUSH_PRIVILEGES;"
+## not working well: mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '<root_password_placeholder>'; FLUSH_PRIVILEGES;"
 ## https://stackoverflow.com/questions/37879448/mysql-fails-on-mysql-error-1524-hy000-plugin-auth-socket-is-not-loaded
-# mysql -u root -e "use mysql; update user set authentication_string=PASSWORD('&5py}h#Vwuq3+P^j') where User='root'; update user set plugin='mysql_native_password' where User='root'; flush privileges;"
+# mysql -u root -e "use mysql; update user set authentication_string=PASSWORD('<root_password_placeholder>') where User='root'; update user set plugin='mysql_native_password' where User='root'; flush privileges;"
 # ps -ax | grep mysql
 # sudo pkill -f mysql
 # ps -ax | grep mysql
@@ -24,7 +24,7 @@
 - hosts: "{{active_hosts_groups}}"
   vars:
     original_mysql_root_password: "testpass"
-    mysql_root_password: "&5py}h#Vwuq3+P^j"
+    mysql_root_password: "<root_password_placeholder>"
   vars_files:
     - ../variables/database-list.json
   remote_user: orchestrator
@@ -89,10 +89,10 @@
   #   ignore_errors: yes
 
   # - name: Set a new root password
-  #   # mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '&5py}h#Vwuq3+P^j'; FLUSH_PRIVILEGES;"
+  #   # mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '<root_password_placeholder>'; FLUSH_PRIVILEGES;"
   #   # select Host, user, authentication_string, password_expired, password_last_changed, password_lifetime, account_locked from user;
   #   # [How to run mysql command from terminal?](https://askubuntu.com/questions/341584/how-to-run-mysql-command-from-terminal)
-  #   command: mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '&5py}h#Vwuq3+P^j'; FLUSH_PRIVILEGES;"
+  #   command: mysql -u root -e "FLUSH PRIVILEGES; SET PASSWORD FOR root@'localhost' = '<root_password_placeholder>'; FLUSH_PRIVILEGES;"
   #   # ignore_errors: yes
 
   # - name: Stop mysqld with --skip-grant-tables

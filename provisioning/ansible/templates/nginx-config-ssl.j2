@@ -22,10 +22,6 @@ server {
   root /var/www/{{ item.key }};
   index index.html;
   autoindex on;
-
-  location / {
-    try_files $uri $uri/ /index.html;
-  }
   
   #__server_placeholder__
 }
