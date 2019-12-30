@@ -125,6 +125,7 @@ There are various extensions that are supporting particular use cases with build
     "key": "ghost-redirect",
     "type": "redirect",
     "placeholder": "server_placeholder",
+    // https://stackoverflow.com/questions/16302897/nginx-location-not-equal-to-regex
     "from": "^/(?!(en|sr))",
     "to": "/sr$request_uri"
 },
