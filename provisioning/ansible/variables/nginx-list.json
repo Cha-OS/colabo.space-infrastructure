@@ -39,7 +39,7 @@
                     "key": "ghost-redirect",
                     "type": "redirect",
                     "placeholder": "server_placeholder",
-                    "from": "^/(?!(en|sr))",
+                    "from": "^/(?!(en|sr|data))",
                     "to": "/en$request_uri"
                 }
             ],
@@ -84,7 +84,7 @@
                 "key": "ghost-redirect",
                 "type": "redirect",
                 "placeholder": "server_placeholder",
-                "from": "^/(?!(en|sr))",
+                "from": "^/(?!(en|sr|data))",
                 "to": "/en$request_uri"
             }],
             "hosts": [
@@ -170,7 +170,7 @@
                     "key": "ghost-redirect",
                     "type": "redirect",
                     "placeholder": "server_placeholder",
-                    "from": "^/(?!(en|sr))",
+                    "from": "^/(?!(en|sr|data))",
                     "to": "/sr$request_uri"
                 }
             ],
@@ -217,7 +217,7 @@
                     "key": "ghost-redirect",
                     "type": "redirect",
                     "placeholder": "server_placeholder",
-                    "from": "^/(?!(en|sr))",
+                    "from": "^/(?!(en|sr|data))",
                     "to": "/en$request_uri"
                 }
             ],
@@ -262,7 +262,7 @@
                 "key": "ghost-redirect",
                 "type": "redirect",
                 "placeholder": "server_placeholder",
-                "from": "^/(?!(en|sr))",
+                "from": "^/(?!(en|sr|data))",
                 "to": "/sr$request_uri"
             }],
             "hosts": [
@@ -367,7 +367,7 @@
                 "key": "ghost-redirect",
                 "type": "redirect",
                 "placeholder": "server_placeholder",
-                "from": "^/(?!(en|sr))",
+                "from": "^/(?!(en|sr|data))",
                 "to": "/sr$request_uri"
             }],
             "hosts": [
