@@ -49,8 +49,9 @@
       state: "absent"
 
   - name: Installs newer versions of the packages you have.
-    apt: upgrade=yes
-    sudo: yes
+    apt: 
+      upgrade: yes
+    # sudo: yes
 
   - name: install node
     apt:
@@ -74,8 +75,9 @@
       state: "absent"
 
   - name: Installs newer versions of the packages you have.
-    apt: upgrade=yes
-    sudo: yes
+    apt: 
+      upgrade: yes
+    # sudo: yes
 
   - name: remove cmdtest (conflicting with yarn, as having tool yarn as well)
     apt:

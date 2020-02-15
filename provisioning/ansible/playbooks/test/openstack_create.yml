@@ -1,0 +1,43 @@
+# ```sh
+# source ~/.ssh/keystone_rc.sh
+# ansible-playbook playbooks/test/openstack_create.yml
+# ```
+
+# NOTE: NOT WORKING. PROBLEM WITH NETWORK
+
+- name: Create a new instance and attaches to a network and passes metadata to the instance
+  hosts: localhost
+  tasks:
+    - name: launch an instance
+      os_server:
+        state: present
+        #  auth:
+        #    auth_url: https://identity.example.com
+        #    username: admin
+        #    password: admin
+        #    project_name: admin
+        name: colabo-test-ansible
+        region_name: osl
+        # image: f4029e3d-5868-45b2-80b9-0d6d93beec58
+        image: GOLD Ubuntu 19.04
+        image_exclude: deprecated
+        availability_zone: osl-default-1
+        # key_name: orchestrator
+        # flavor: 4
+        flavor_ram: 2048
+        # flavor_include: Performance
+        nics:
+          - net-id: c97fa886-592e-4ad1-a995-6d55651bed78
+          - net-name: dualStack
+        # floating_ip_pools: public1_IPv4
+        floating_ips:
+          - 
+        meta:
+          hostname: colabo-test-ansible-host
+          # group: uge_master
+        # security_groups: default
+        security_groups: ICMP-SSH-HTTP-HTTPS-security-group
+        # auto_ip: yes
+        # boot_from_volume: yes
+        timeout: 1000
+        wait: yes

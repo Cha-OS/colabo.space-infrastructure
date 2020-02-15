@@ -388,6 +388,8 @@
                     "apps.colabo.space",
                     "psc.colabo.space",
                     "psc-test.colabo.space",
+                    "clm.colabo.space",
+                    "clm-test.colabo.space",
                     "manager.colabo.space"
                 ]
             },
@@ -435,6 +437,52 @@
         }, {
             "key": "colabo-apps-psc-test",
             "host": "psc-test.colabo.space",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+        }, {
+            "key": "colabo-apps-clm",
+            "host": "clm.colabo.space",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+        }, {
+            "key": "colabo-apps-clm-test",
+            "host": "clm-test.colabo.space",
             "aliases": "",
             "web_root": {
                 "owner": "www-data",

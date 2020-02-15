@@ -16,3 +16,9 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
 # Examples
 
 There are no any special configuration parameters in the `node-list.json`
+
+# Troubleshooting
+
+## The following packages have unmet dependencies
+
+[How do I resolve `The following packages have unmet dependencies`](https://stackoverflow.com/questions/26571326/how-do-i-resolve-the-following-packages-have-unmet-dependencies)

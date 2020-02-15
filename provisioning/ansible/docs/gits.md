@@ -28,9 +28,16 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
 ## Private repo
 
 + You need to provide path to the private key `key_file_pem` and public key `key_file_pub`
+    + to generate: `ssh-keygen`
+        + provide absolute path, as relative is making problems?!
 + The `repo` path should be within SSH format, rather than HTTPS
 + Before starting the playbook, you need to login remotely as the user which runs playbook on the romote machine and accept github host: `ssh -T git@github.com`
   + TBD: This can be avoided by extending the playbook
+
+### Github
+
+https://github.com/settings/keys
+
 
 ```json
 {
@@ -47,6 +54,27 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
     "group": "developers",
     "mode": "ug=rwX,o=rX,g+s"
 }
+```
+
+Bitbucket:
+```json
+{
+        "key": "ml-share",
+        "repo_https": "https://bitbucket.org/mPrinC/ml-laza/",
+        "repo": "git@bitbucket.org:mprinc/ml-laza.git",
+        "key_file_pem": "~/.ssh/bitbucket-sasha.pem",
+        "key_file_pub": "~/.ssh/bitbucket-sasha.pub",
+        "dest": "/var/repos/ml-laza",
+        "depth": 1,
+        "force": true,
+        "recursive": true,
+        "owner": "www-data",
+        "group": "developers",
+        "mode": "ug=rwX,o=rX,g+s",
+        "hosts": [
+            "instances"
+        ]
+    }
 ```
 
 + https://docs.ansible.com/ansible/latest/modules/git_module.html
