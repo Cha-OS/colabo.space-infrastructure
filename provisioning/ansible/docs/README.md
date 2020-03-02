@@ -356,7 +356,10 @@ This playbook installs nginx and configures all hosts
 
 ```sh
 # real
-ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/nginx.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["blogs"]}' playbooks/nginx.yml
+
+# only `create_ssl` tagged tasks
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' --tags 'create_ssl' playbooks/nginx.yml
 
 # just checking
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key --check ~/.ssh/orchestratio-iaas-no.pem  --extra-vars '{"active_hosts_groups": ["services"]}' playbooks/nginx.yml

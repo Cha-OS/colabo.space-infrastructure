@@ -7,6 +7,8 @@ Each key in the `items_array` represents the folder inside the `/var/www` that w
 
 ```sh
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/nginx.yml
+
+ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' --tags 'create_ssl' playbooks/nginx.yml
 ```
 
 # Usefull
@@ -95,6 +97,35 @@ You can:
 ```
 
 **IMPORTANT**: In this case we have to extend the refered certificate with all aliases hosts of the website that refers to another host's certificate
+
+### Issues
+
+General advice:
+```sh
+sudo tail -n 100 /var/log/letsencrypt/letsencrypt.log
+sudo tail -n 50 /var/log/nginx/error.log
+sudo tail -n 100 /var/log/nginx/ghost-litterra.access.log
+sudo tail -n 100 /var/log/nginx/ghost-litterra.access.plus.log
+sudo tail -n 100 /var/log/nginx/ghost-litterra.error.log
+
+# ssl_certificate
+sudo cat /etc/letsencrypt/live/ghost-litterra/fullchain.pem
+
+# ssl_certificate_key
+sudo cat /etc/letsencrypt/live/ghost-litterra/privkey.pem
+
+# ssl_trusted_certificate
+sudo cat /etc/letsencrypt/live/ghost-litterra/chain.pem;
+
+# /.well-known/acme-challenge/
+ls -al /var/www/ghost-litterra/letsencrypt/
+
+sudo systemctl restart nginx
+```
+
+#### To many sites-available
+
++ check the `/etc/nginx/sites-available` if there are any duplicated or wrongly dirtected sites, as that might be missleading for the certbot
 
 ## Extensions
 

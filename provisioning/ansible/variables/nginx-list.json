@@ -269,111 +269,6 @@
                 "blogs"
             ]
         }, {
-            "key": "litterra",
-            "host": "litterra.net",
-            "aliases": "www.litterra.net litterra.info www.litterra.info",
-            "web_root": {
-                "owner": "www-data",
-                "group": "developers",
-                "mode": "u=rwx,g=rwxs,o=rx"
-            },
-            "certificate": {
-                "email": "chaos.ngo@gmail.com",
-                "hosts": [
-                    "litterra.net",
-                    "www.litterra.net",
-                    "litterra.info",
-                    "www.litterra.info",
-                    "bukvik.litterra.net",
-                    "bukvik.litterra.info"
-                ]
-            },
-            "extensions": [{
-                "key": "location",
-                "type": "location",
-                "placeholder": "server_placeholder"
-            }, {
-                "key": "api",
-                "api_path": "api",
-                "type": "api",
-                "proxy_pass": "http://127.0.0.1:9027",
-                "placeholder": "server_placeholder"
-            }, {
-                "key": "well-known",
-                "type": "well-known",
-                "placeholder": "server_placeholder"
-            }],
-            "hosts": [
-                "litterra"
-            ]
-        },
-        {
-            "key": "bukvik",
-            "host": "bukvik.litterra.net",
-            "aliases": "bukvik.litterra.net bukvik.litterra.info",
-            "web_root": {
-                "owner": "www-data",
-                "group": "developers",
-                "mode": "u=rwx,g=rwxs,o=rx"
-            },
-            "certificate_comment": "realized through litterra website certificate",
-            "certificate_reference": "litterra",
-            "extensions": [{
-                "key": "location",
-                "type": "location",
-                "placeholder": "server_placeholder"
-            }, {
-                "key": "well-known",
-                "type": "well-known",
-                "placeholder": "server_placeholder"
-            }],
-            "hosts": [
-                "litterra"
-            ]
-        }, {
-            "key": "ghost-litterra",
-            "host": "blog.litterra.net",
-            "aliases": "",
-            "web_root": {
-                "owner": "www-data",
-                "group": "developers",
-                "mode": "u=rwx,g=rwxs,o=rx"
-            },
-            "certificate": {
-                "email": "chaos.ngo@gmail.com",
-                "hosts": [
-                    "blog.litterra.net"
-                ]
-            },
-            "extensions": [{
-                "key": "well-known",
-                "type": "well-known",
-                "placeholder": "server_placeholder"
-            }, {
-                "key": "ghost-en",
-                "type": "ghost",
-                "main": true,
-                "placeholder": "server_placeholder",
-                "language": "en",
-                "port": 25013
-            }, {
-                "key": "ghost-sr",
-                "type": "ghost",
-                "placeholder": "server_placeholder",
-                "language": "sr",
-                "port": 25014
-            },
-            {
-                "key": "ghost-redirect",
-                "type": "redirect",
-                "placeholder": "server_placeholder",
-                "from": "^/(?!(en|sr|data))",
-                "to": "/sr$request_uri"
-            }],
-            "hosts": [
-                "blogs"
-            ]
-        }, {
             "key": "colabo-apps",
             "host": "apps.colabo.space",
             "aliases": "",
@@ -525,6 +420,187 @@
             }],
             "hosts": [
                 "instances"
+            ]
+        }, {
+            "key": "ghost-litterra",
+            "host": "litterra.net",
+            "aliases": "www.litterra.net",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate": {
+                "email": "chaos.ngo@gmail.com",
+                "hosts": [
+                    "litterra.net",
+                    "www.litterra.net"
+                ]
+            },
+            "extensions": [{
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "ghost-en",
+                "type": "ghost",
+                "main": true,
+                "placeholder": "server_placeholder",
+                "language": "en",
+                "port": 25013
+            }, {
+                "key": "ghost-sr",
+                "type": "ghost",
+                "placeholder": "server_placeholder",
+                "language": "sr",
+                "port": 25014
+            },
+            {
+                "key": "ghost-redirect",
+                "type": "redirect",
+                "placeholder": "server_placeholder",
+                "from": "^/(?!(en|sr|data))",
+                "to": "/sr$request_uri"
+            }],
+            "hosts": [
+                "blogs"
+            ]
+        },
+        {
+            "key": "read.litterra",
+            "host": "read.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate": {
+                "email": "chaos.ngo@gmail.com",
+                "hosts": [
+                    "read.litterra.net",
+                    "legacy.litterra.net",
+                    "bukvik.litterra.net",
+                    "cvrkut.litterra.net",
+                    "perlaj.litterra.net"
+                ]
+            },
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "api_path": "api",
+                "type": "api",
+                "proxy_pass": "http://127.0.0.1:9027",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "litterra"
+            ]
+        },
+        {
+            "key": "legacy.litterra",
+            "host": "legacy.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through read.litterra website certificate",
+            "certificate_reference": "read.litterra",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "api_path": "api",
+                "type": "api",
+                "proxy_pass": "http://127.0.0.1:9027",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "litterra"
+            ]
+        }, {
+            "key": "bukvik.litterra",
+            "host": "bukvik.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through read.litterra website certificate",
+            "certificate_reference": "read.litterra",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "litterra"
+            ]
+        }, {
+            "key": "cvrkut.litterra",
+            "host": "cvrkut.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through read.litterra website certificate",
+            "certificate_reference": "read.litterra",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "litterra"
+            ]
+        }, {
+            "key": "perlaj.litterra",
+            "host": "perlaj.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through read.litterra website certificate",
+            "certificate_reference": "read.litterra",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "litterra"
             ]
         }
     ]

@@ -239,7 +239,7 @@ If successful, then new key and certificate files should have been created under
 
 If there are problems check:
 ```sh
- check for the certbot-auto errors
+check for the certbot-auto errors
 sudo tail /var/log/letsencrypt/letsencrypt.log
 # check for the nginx access errors
 sudo tail /var/log/nginx/error.log

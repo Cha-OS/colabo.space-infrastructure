@@ -158,7 +158,7 @@
     }, {
         "key": "ghost-litterra-en",
         "folder": "ghost-litterra",
-        "host": "blog.litterra.net",
+        "host": "litterra.net",
         "port": 25013,
         "language": "en",
         "user": "ghost",
@@ -170,7 +170,7 @@
     }, {
         "key": "ghost-litterra-sr",
         "folder": "ghost-litterra",
-        "host": "blog.litterra.net",
+        "host": "litterra.net",
         "port": 25014,
         "language": "sr",
         "user": "ghost",

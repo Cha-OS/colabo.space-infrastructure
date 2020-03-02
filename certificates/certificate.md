@@ -167,3 +167,31 @@ server = https://acme-v02.api.letsencrypt.org/directory
 savamrkalj.com = /var/www/ghost-savamrkalj/letsencrypt
 www.savamrkalj.com = /var/www/ghost-savamrkalj/letsencrypt
 ```
+
+## Not Secure
+
+Browser is reporting `not secure` website although you have certificate
+
+https://check-your-website.server-daten.de/?q=litterra.net
+
+### Images issues
+
+![Img error](./images/security-images.png)
+
+```html
+<img "Bukvik" src="http://bukvik.litterra.net/images/logo/bukvik%20logo.jpg" width="15%" />
+```
+
+### Miscelaneous
+
+Check your website:
++ https://check-your-website.server-daten.de/?q=litterra.net
++ for litterra.ne it says all fine there
++ it could be due to changing ip addresses as we swapped littera.net with blog.litterra.net
++ after rebooting machine, all was fine! :)
+
+I checked www.litterra.net instead of litterra.net and it was secure
++ In the `colabo.space-infrastructure/provisioning/ansible/variables/nginx-list.json` there was in the `aliases` field `"aliases": "www.litterra.net",` instead of `"aliases": "litterra.net www.litterra.net",` but that should not be an issue
+
+
+https://xneelo.co.za/help-centre/website/fix-not-secure-website-warning/
