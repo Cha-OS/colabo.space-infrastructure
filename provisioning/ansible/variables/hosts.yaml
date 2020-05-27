@@ -4,9 +4,17 @@
 # Used to orchestrate services
 orchestrators:
   hosts:
-    orchestrator-1:
-        ansible_host: 158.39.75.31
-        ansible_port: 22
+    orchestrator-osl:
+      # oslo
+      ansible_host: 158.39.75.31
+      ansible_port: 22
+      ansible_python_interpreter: /usr/bin/python3
+    master_primary:
+      #  bergen
+      # Orchestrator at Bergen
+      ansible_host: 158.39.201.131
+      ansible_port: 22
+      ansible_python_interpreter: /usr/bin/python3
 
 # Used to run colabo.space apps
 instances:
@@ -24,6 +32,45 @@ blogs:
     blog-1:
         ansible_host: 158.37.63.168
         ansible_python_interpreter: /usr/bin/python3
+
+# Used to run wikis (Mediawiki)
+wikis:
+  hosts:
+    blog-1:
+        ansible_host: 158.37.63.168
+        ansible_python_interpreter: /usr/bin/python3
+
+# Used to run wikis (Mediawiki)
+colaboflow:
+  children:
+    # Used to manage colaboflow farm
+    managers:
+      vars:
+        type: manager
+      children:
+        main:
+          vars:
+            subtype: primary
+          hosts:
+            master_primary:
+        regular:
+          vars:
+            subtype: regular
+          hosts:
+
+    # Used to execute tasks at colaboflow farm
+    workers:
+      vars:
+        type: worker
+      hosts:
+        colaboflow-1:
+          # bergen
+          ansible_host: 158.39.201.140
+          ansible_python_interpreter: /usr/bin/python3
+        colaboflow-2:
+          # bergen
+          ansible_host: 158.39.201.146
+          ansible_python_interpreter: /usr/bin/python3
 
 # Used to run time demanding backend services
 services:

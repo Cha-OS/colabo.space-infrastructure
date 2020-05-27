@@ -2,6 +2,9 @@
 
 This playbook installs node, build tools and yarn
 
+It follows:
+https://github.com/nodesource/distributions#debinstall
+
 # TODO
 
 Forbid installing problematic cmdtools:

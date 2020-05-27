@@ -1,5 +1,7 @@
 # Info
 
+[Pitfalls and Common Mistakes](https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls)
+
 This playbook installs nginx and configures all hosts
 
 Each key in the `items_array` represents the folder inside the `/var/www` that will be used 

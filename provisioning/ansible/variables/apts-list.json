@@ -1,57 +1,105 @@
 {
-    "items_array": [{
+    "items_array": [
+        {
+            "key": "repository-universe-1",
+            "comment": "necessary for Ubuntu 20+ for pip and pip3, https://askubuntu.com/questions/1061486/unable-to-locate-package-python-pip-when-trying-to-install-from-fresh-18-04-in",
+            "repository": "deb http://archive.ubuntu.com/ubuntu/ bionic universe",
+            "state": "present"
+        },
+        {
+            "key": "repository-universe-2-security",
+            "repository": "deb http://security.ubuntu.com/ubuntu/ bionic-security universe",
+            "state": "present"
+        },
+        {
+            "key": "apt-key-docker",
+            "apt_key": "https://download.docker.com/linux/ubuntu/gpg",
+            "state": "present",
+            "_tags": [
+                "docker"
+            ]
+        },
+        {
+            "key": "repository-docker",
+            "repository": "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable",
+            "state": "present",
+            "_tags": [
+                "docker"
+            ]
+        },
+        {
+            "key": "OpenFaaS-CLI",
+            "by_url": "https://cli.openfaas.com",
+            "state": "present",
+            "_tags": [
+                "openfaas"
+            ],
+            "hosts": [
+                "master_primary"
+            ]
+        },
+        {
             "key": "cmdtest",
+            "package": "cmdtest",
             "comment": "we need to remove it, otherwise installing npm packages with `yarn` would fail",
             "state": "absent"
         },
         {
             "key": "joe",
+            "package": "joe",
             "state": "present"
         },
         {
             "key": "screen",
+            "package": "screen",
             "state": "present"
         },
         {
             "key": "unzip",
+            "package": "unzip",
             "state": "present"
         },
         {
             "key": "zip",
+            "package": "zip",
             "state": "present"
         },
         {
             "key": "git",
+            "package": "git",
             "state": "present"
         },
         {
             "key": "cowsay",
+            "package": "cowsay",
             "state": "present"
         },
         {
             "key": "fortune",
+            "package": "fortune",
             "state": "present"
         },
         {
             "key": "wget",
+            "package": "wget",
             "state": "present"
         },
         {
             "key": "gcc",
+            "package": "gcc",
             "state": "present"
         },
         {
             "key": "certbot",
+            "package": "certbot",
             "state": "present"
         },
         {
-            "key": [
-                "python",
-                "python-pip",
+            "key": "python3",
+            "package": [
                 "python3",
                 "python3-pip",
                 "python3-virtualenv",
-                "python-virtualenv",
                 "virtualenv"
             ],
             "state": "present",
@@ -60,7 +108,21 @@
             ]
         },
         {
-            "key": [
+            "key": "python2",
+            "package": [
+                "python",
+                "python-pip",
+                "python-virtualenv"
+            ],
+            "comment": "removed 'python-pip' and 'python-virtualenv' as they are making issues with Ubuntu 20+",
+            "state": "present",
+            "_tags": [
+                "python"
+            ]
+        },
+        {
+            "key": "certbot",
+            "package": [
                 "zlib1g-dev",
                 "augeas-doc",
                 "augeas-tools",
@@ -77,7 +139,14 @@
             ]
         },
         {
-            "key": [
+            "key": "mongodb",
+            "package": "mongodb",
+            "comment": "It seems that for Ubuntu 20.04 LTS it is straightforward to install mongodb like this",
+            "state": "present"
+        },
+        {
+            "key": "mysql",
+            "package": [
                 "mysql-server",
                 "mysql-client",
                 "python3-pymysql",
@@ -93,7 +162,8 @@
             ]
         },
         {
-            "key": [
+            "key": "php",
+            "package": [
                 "php-cli",
                 "php-cgi",
                 "php-fpm",
@@ -105,6 +175,58 @@
             ],
             "_tags": [
                 "php"
+            ]
+        },
+        {
+            "key": "wiki",
+            "package": [
+                "php-mbstring",
+                "php-xml",
+                "php-gd",
+                "php-apcu"
+            ],
+            "state": "present",
+            "hosts": [
+                "wikis"
+            ],
+            "_tags": [
+                "php"
+            ]
+        },
+        {
+            "key": "docker-https-prerequisites",
+            "package": [
+                "apt-transport-https",
+                "ca-certificates",
+                "curl",
+                "gnupg-agent",
+                "software-properties-common"
+            ],
+            "state": "present",
+            "hosts": [
+                "colaboflow",
+                "orchestrators",
+                "orchestrator-bgo"
+            ],
+            "_tags": [
+                "docker"
+            ]
+        },
+        {
+            "key": "docker",
+            "package": [
+                "docker-ce",
+                "docker-ce-cli",
+                "containerd.io"
+            ],
+            "state": "present",
+            "hosts": [
+                "colaboflow",
+                "orchestrators",
+                "orchestrator-bgo"
+            ],
+            "_tags": [
+                "docker"
             ]
         }
     ]

@@ -105,6 +105,13 @@
                 "blogs"
             ]
         }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "wiki_colabo_discuss",
+            "hosts": [
+                "wikis"
+            ]
+        }, {
             "key": "user",
             "type": "mysql.user",
             "name": "ghost",
@@ -248,6 +255,14 @@
             "privileges": 'litterra.*:ALL',
             "hosts": [
                 "litterra"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "wiki",
+            "privileges": 'wiki_colabo_discuss.*:ALL',
+            "hosts": [
+                "wikis"
             ]
         }
     ]

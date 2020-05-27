@@ -21,14 +21,27 @@
     tags: [always]
 
   # -----------------------------------
-  # Real build tasks
+  # Real build tasks (command)
   # -----------------------------------
   - name: Run remote build task (on remote machine)
-    with_items: "{{ items_array }}"
-    when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
     # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    # NOTE: The command(s) will not be processed through the shell
+    with_items: "{{ items_array }}"
+    when: "{{ (item.disabled is not defined) and (item.command is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
     command: "{{ item.command }}"
     args:
       chdir: "{{item.path | default(None) }}" # default is None
     become_user: "{{ item.user | default(omit) }}"
     # https://stackoverflow.com/questions/44004727/how-to-run-local-command-via-ansible-playbook?rq=1
+
+  # -----------------------------------
+  # Real build tasks (shell)
+  # -----------------------------------
+  - name: Run remote build task (on remote machine)
+    with_items: "{{ items_array }}"
+    when: "{{ (item.disabled is not defined) and (item.shell is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
+    # https://docs.ansible.com/ansible/latest/modules/shell_module.html
+    shell: "{{ item.shell }}"
+    args:
+      chdir: "{{item.path | default(None) }}" # default is None
+    become_user: "{{ item.user | default(omit) }}"

@@ -1,0 +1,167 @@
+# joe playbooks/colabofarm.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["services", "colaboflow"]}' playbooks/colabofarm.yml --tags love,start,debug
+---
+- hosts: "{{active_hosts_groups}}"
+  vars_files:
+    - ../variables/colabofarm-list.json
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  tasks:
+
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_speciffic_data.yml"
+    tags: [always]
+
+  # -----------------------------------
+  # Install docker
+  # -----------------------------------
+  # -----------------------------------
+
+    # -----------------------------------
+  # List nodes
+  # -----------------------------------
+  - name: List manager nodes
+    when: type is defined and type == 'manager' # check nodes matching
+    # https://docs.ansible.com/ansible/latest/modules/apt_key_module.html
+    debug:
+      msg: "manager: type={{ type }}, subtype={{ subtype }}"
+
+  - name: List worker nodes
+    when: type is defined and type == 'worker' # check nodes matching
+    # https://docs.ansible.com/ansible/latest/modules/apt_key_module.html
+    debug:
+      msg: "worker: type={{ type }}"
+
+  - name: "Restart Docker service"
+    service: name=docker state=started
+
+  - name: "create swarm"
+    # only for primary manager
+    when: type is defined and type == 'manager' and subtype is defined and subtype == 'primary'
+    # https://docs.ansible.com/ansible/latest/modules/docker_swarm_module.html
+    docker_swarm:
+        state: present
+    # shell: docker swarm init --advertise-addr {{ ansible_eth0['ipv4']['address'] }}
+    # when: "docker_info.stdout.find('Swarm: inactive') != -1"
+
+  - name: Get docker info
+    # only for managers
+    when: type is defined and type == 'manager' and subtype is defined and subtype == 'primary'
+    # https://docs.ansible.com/ansible/latest/modules/docker_swarm_info_module.html
+    docker_swarm_info:
+      # https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#registering-variables
+      # registering the result of the command as a variable
+    register: docker_info
+
+  # - name: Get docker info (natively)
+  #  # only for managers
+  #  when: type is defined and type == 'manager'
+  #   # https://docs.ansible.com/ansible/latest/modules/shell_module.html
+  #   shell: docker info
+  #   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#registering-variables
+  #   # registering the result of the command as a variable
+  #   register: docker_info
+  #   # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#overriding-the-changed-result
+  #   # never changed
+  #   changed_when: False
+
+  # - name: Report fact_docker_info
+  #   debug:
+  #     msg: "fact_docker_info: {{ hostvars['master_primary']['docker_info'] }}"
+
+  - name: Set docker info as a fact
+    # from the `master_primary` to the current host
+    set_fact:
+      # cacheable: yes
+      docker_info: "{{ hostvars['master_primary']['docker_info'] }}"
+
+  - name: Report docker_info
+    # only for managers
+    # when: type is defined and type == 'manager' and subtype is defined and subtype == 'primary'
+    debug:
+      msg: "docker_info: {{ docker_info }}"
+
+  - name: "Log for: Add swarm managers"
+    # only for managers
+    when: type is defined and type == 'manager'
+    # https://docs.ansible.com/ansible/latest/modules/docker_swarm_module.html
+    debug:
+        msg: "remote_addrs: [ {{ansible_host}} ], docker_info['swarm_facts']['JoinTokens']['Manager']: {{ docker_info['swarm_facts']['JoinTokens']['Manager'] }}"
+
+  - name: "Add swarm managers"
+    # only for managers
+    when: type is defined and type == 'manager'
+    # https://docs.ansible.com/ansible/latest/modules/docker_swarm_module.html
+    docker_swarm:
+        state: join
+        advertise_addr: "{{ ansible_host }}"
+        join_token: docker_info['swarm_facts']['JoinTokens']['Manager']
+        remote_addrs: "[ {{ansible_host}} ]"
+    # shell: docker swarm init --advertise-addr {{ ipaddr('0.0.0.0/0') | first }}
+    # when: "docker_info.stdout.find('Swarm: inactive') != -1"
+
+  - name: "Log for: Add swarm workers"
+    # only for workers
+    when: type is defined and type == 'worker'
+    # https://docs.ansible.com/ansible/latest/modules/docker_swarm_module.html
+    debug:
+        msg: "advertise_addr: {{ansible_host}}, remote_addrs: [ {{hostvars['master_primary']['ansible_host']}} ], docker_info['swarm_facts']['JoinTokens']['Worker']: {{ docker_info['swarm_facts']['JoinTokens']['Worker'] }}"
+
+  # This command doesn't work for workers, reports: wrong token
+  # - name: "Add swarm workers"
+  #   # only for workers
+  #   when: type is defined and type == 'worker'
+  #   # https://docs.ansible.com/ansible/latest/modules/docker_swarm_module.html
+  #   docker_swarm:
+  #       state: join
+  #       advertise_addr: "{{ ansible_host }}"
+  #       join_token: docker_info['swarm_facts']['JoinTokens']['Worker']
+  #       remote_addrs: [ "{{hostvars['master_primary']['ansible_host']}}:2377" ]
+  #   # shell: docker swarm init --advertise-addr {{ ipaddr('0.0.0.0/0') | first }}
+  #   # when: "docker_info.stdout.find('Swarm: inactive') != -1"
+
+  # This command is a workaround for the previos non-working command
+  - name: "Add swarm workers"
+    # only for workers
+    when: type is defined and type == 'worker'
+    shell: "docker swarm join --token {{ docker_info['swarm_facts']['JoinTokens']['Worker'] }} {{ hostvars['master_primary']['ansible_host'] }}:2377"
+    # retries: 3
+    # delay: 20
+    # # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#overriding-the-changed-result
+    register: result_joining
+    failed_when: result_joining.rc >= 1 and "This node is already part of a swarm" not in result_joining.stderr # (result_joining.rc) >= 1 and ("This node is already part of a swarm" in result_joining.stderr)
+    changed_when: result_joining.rc <= 0 # when joining succeeded
+
+  # - name: debug joining
+  #   debug:
+  #     msg: "result_joining = {{ result_joining }}"
+
+  # -----------------------------------
+  # Install OpenFaaS
+  # -----------------------------------
+  # -----------------------------------
+
+  # TODO split into separate commands and make it more idempotent
+  # Installs OpenFaaS Stack on Docker Swarm as a set of services running mostly on the manager nodes
+  - name: "Installs OpenFaaS Stack on Docker Swarm"
+    # only for primary manager
+    when: type is defined and type == 'manager' and subtype is defined and subtype == 'primary'
+    shell: "git clone https://github.com/openfaas/faas && cd faas && ./deploy_stack.sh"
+    # retries: 3
+    # delay: 20
+    # # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#overriding-the-changed-result
+    register: result_installing_openfass_stack
+    failed_when: result_installing_openfass_stack.rc > 0 and \
+      not (result_installing_openfass_stack.rc == 128 and "destination path 'faas' already exists and is not an empty directory" in result_installing_openfass_stack.stderr)
+    changed_when: result_installing_openfass_stack.rc <= 0 # when joining succeeded
+
+  - name: debug installing OpenFaaS Stack
+    debug:
+      msg: "result_installing_openfass_stack = {{ result_installing_openfass_stack }}"
+

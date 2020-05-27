@@ -10,7 +10,7 @@
             "package": "virtualenv",
             "executable": "pip3"
         }, {
-            "key": "pymongo",
+        "key": "pymongo",
             "package": "pymongo",
             "type": "pip23",
             "_virtualenv": "/var/services/colabo-env-python"
@@ -19,13 +19,19 @@
             "key": "requirements-big-packages",
             "type": "requirements23",
             "_virtualenv": "/var/data/litterra/python-env",
-            "requirements": "../variables/requirements-similarity.txt"
+            "requirements": "../variables/requirements-similarity.txt",
+            "hosts": [
+                "services"
+            ]
         },
         {
             "key": "requirements-similarity",
             "type": "requirements2",
             "_virtualenv": "/var/services/colabo-env-python",
-            "requirements": "../variables/requirements-similarity.txt"
+            "requirements": "../variables/requirements-similarity.txt",
+            "hosts": [
+                "services"
+            ]
         },
         {
             "key": "requirements-colaboflow",
@@ -33,8 +39,15 @@
             "_virtualenv": "/var/services/colabo-env-python",
             "requirements": "../variables/requirements-colaboflow.txt",
             "hosts": [
-                "litterra"
+                "litterra",
+                "colaboflow"
             ]
+        },
+        {
+            "key": "requirements-colaboflow-docker",
+            "type": "pip3",
+            "package": "docker",
+            "executable": "pip3"
         }
     ]
 }

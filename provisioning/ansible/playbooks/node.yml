@@ -20,9 +20,9 @@
   - import_tasks: "include/_load_host_speciffic_data.yml"
     tags: [always]
 
-  - name: enable node 8.x
+  - name: enable node 13.x
     # https://docs.ansible.com/ansible/latest/modules/shell_module.html
-    shell: "sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -"
+    shell: "sudo curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -"
     args:
       chdir: "/tmp"
 
@@ -63,10 +63,11 @@
       name: "gcc,g++,make"
       state: "present"
 
-  - name: install npm
-    apt:
-      name: "npm"
-      state: "present"
+  # This is not necessary
+  # - name: install npm
+  #   apt:
+  #     name: "npm"
+  #     state: "present"
 
   # repeated many times as noticed that after the first time it still installs cmdtest?!
   - name: remove cmdtest (conflicting with yarn, as having tool yarn as well)
@@ -89,4 +90,8 @@
       name: "yarn"
       state: "present"
 
+  - name: remove cmdtest (conflicting with yarn, as having tool yarn as well)
+    apt:
+      name: "cmdtest"
+      state: "absent"
       

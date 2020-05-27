@@ -41,7 +41,7 @@
       "file_mode": "ug=rwX,o=rX,g+s",
       "file_state": "file",
       "_tags": ["colaboflow"],
-      "hosts": ["litterra"]
+      "hosts": ["_litterra"]
     },
     {
       "key": "service-go-config",
@@ -56,7 +56,7 @@
       "file_mode": "ug=rwX,o=rX,g+s",
       "file_state": "file",
       "_tags": ["colaboflow"],
-      "hosts": ["litterra", "service-1"]
+      "hosts": ["_litterra", "service-1"]
     },
 
     {
@@ -70,7 +70,7 @@
       "file_group": "developers",
       "file_mode": "ug=rwX,o=rX,g+s",
       "file_state": "directory",
-      "hosts": ["services", "litterra"]
+      "hosts": ["services", "_litterra"]
     },
     {
       "key": "colabo-business-services-config",
@@ -83,7 +83,7 @@
       "file_group": "developers",
       "file_mode": "ug=rwX,o=rX,g+s",
       "file_state": "file",
-      "hosts": ["services", "litterra"]
+      "hosts": ["services", "_litterra"]
     },
     {
       "key": "colabo-frontend",
@@ -126,6 +126,38 @@
       "file_state": "file",
       "_tags": ["backend"],
       "hosts": ["instances", "_litterra"]
+    },
+    {
+      "key": "colaboflow-demo-app",
+      "src": "../../../../colabo/src/frontend/demos/colaboflow/dist/colaboflow-demo/",
+      "dest": "/var/www/colabo-flow/",
+      "delete": true,
+      "mode": "push",
+      "recursive": true,
+      "file_owner": "www-data",
+      "file_group": "developers",
+      "file_mode": "ug=rwX,o=rX,g+s",
+      "file_state": "directory",
+      "_tags": ["frontend"],
+      "hosts": [
+        "colaboflow"
+      ]
+    },
+    {
+      "key": "litterra-frontend-app",
+      "src": "../../../../../LitTerra-zontik/LitTerra/src/frontend/apps/litterra/dist/litterra/",
+      "dest": "/var/www/read.litterra/",
+      "delete": true,
+      "mode": "push",
+      "recursive": true,
+      "file_owner": "www-data",
+      "file_group": "developers",
+      "file_mode": "ug=rwX,o=rX,g+s",
+      "file_state": "directory",
+      "_tags": ["frontend"],
+      "hosts": [
+        "litterra"
+      ]
     }
   ]
 }

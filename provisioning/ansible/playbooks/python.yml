@@ -7,8 +7,8 @@
     - ../variables/python-list.json
   remote_user: orchestrator
   # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
-  # become: yes
-  # become_method: sudo
+  become: yes
+  become_method: sudo
   gather_facts: false
 
   tasks:
@@ -32,6 +32,7 @@
       # https://grokbase.com/t/gg/ansible-project/149h48ttgb/passing-module-params-conditionally
       virtualenv: "{{item._virtualenv + '2' if item._virtualenv is defined else omit }}" # default is `omit`
       executable: "{{item.executable | default(omit) }}"
+      virtualenv_command: "virtualenv"
       virtualenv_python: 'python2'
     # when: item.type == 'pip23' or item.type == 'pip2'
 

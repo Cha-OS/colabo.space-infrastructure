@@ -28,7 +28,7 @@
     with_items: "{{ items_array }}"
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     debug:
-        msg: "{{\"ng build --prod --base-href '\" + item.basehref + \"'\" if item.basehref is defined else 'ng build --prod' }}"
+        msg: "{{\"ng build --prod --aot --vendor-chunk --common-chunk --delete-output-path --buildOptimizer --base-href '\" + item.basehref + \"'\" if item.basehref is defined else 'ng build --prod --aot --vendor-chunk --common-chunk --delete-output-path --buildOptimizer' }}"
   - name: Run angular cli build (on local machine)
     with_items: "{{ items_array }}"
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching

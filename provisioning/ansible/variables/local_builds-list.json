@@ -6,5 +6,19 @@
         "hosts": [
             "instances"
         ]
+    },{
+        "key": "colaboflow-frontend",
+        "path": "../../../../colabo/src/frontend/demos/colaboflow/",
+        "basehref": "/",
+        "hosts": [
+            "colaboflow"
+        ]
+    },{
+        "key": "litterra-frontend",
+        "path": "../../../../../LitTerra-zontik/LitTerra/src/frontend/apps/litterra/",
+        "basehref": "/",
+        "hosts": [
+            "litterra"
+        ]
     }]
 }

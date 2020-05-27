@@ -1,0 +1,10 @@
+{
+    "items_array": [
+        {
+            "key": "managers",
+            "comment": "necessary for Ubuntu 20+ for pip and pip3, https://askubuntu.com/questions/1061486/unable-to-locate-package-python-pip-when-trying-to-install-from-fresh-18-04-in",
+            "repository": "deb http://archive.ubuntu.com/ubuntu/ bionic universe",
+            "state": "present"
+        }
+   ]
+}

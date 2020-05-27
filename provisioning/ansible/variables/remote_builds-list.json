@@ -2,88 +2,131 @@
     "items_array": [{
             "key": "mongodb-install-1 - Import the public key",
             "comment": "https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/",
+            "comment_disabled": "Seems to be working fine with Ubuntu 20.04 LTS",
+            "disabled": true,
             "user": "root",
             "path": "/var/services/",
             "command": "apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4",
             "_tags": [
                 "mongodb",
+                "before_ubuntu_20",
                 "install"
             ],
             "hosts": [
                 "instances",
-                "litterra"
+                "litterra",
+                "colaboflow"
             ]
         }, {
             "key": "mongodb-install-1.1 - Check ubuntu version",
+            "comment_disabled": "Seems to be working fine with Ubuntu 20.04 LTS",
+            "disabled": true,
             "user": "root",
             "path": "/var/services/",
             "command": "lsb_release -a",
             "_tags": [
                 "mongodb",
+                "before_ubuntu_20",
                 "install"
             ],
             "hosts": [
                 "instances",
-                "litterra"
+                "litterra",
+                "colaboflow"
             ]
         },
         {
             "key": "mongodb-install-2 - Create a list file",
+            "comment_disabled": "Seems to be working fine with Ubuntu 20.04 LTS",
+            "disabled": true,
             "user": "root",
             "path": "/var/services/",
             "command": "echo 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse' | tee /etc/apt/sources.list.d/mongodb-org-4.0.list",
             "_tags": [
                 "mongodb",
+                "before_ubuntu_20",
                 "install"
             ],
             "hosts": [
                 "instances",
-                "litterra"
+                "litterra",
+                "colaboflow"
             ]
         }, {
             "key": "mongodb-install-3 - Reload local package database",
+            "comment_disabled": "Seems to be working fine with Ubuntu 20.04 LTS",
+            "disabled": true,
             "user": "root",
             "path": "/var/services/",
             "command": "apt-get update",
             "_tags": [
                 "mongodb",
+                "before_ubuntu_20",
                 "install"
             ],
             "hosts": [
                 "instances",
-                "litterra"
+                "litterra",
+                "colaboflow"
             ]
         },
         {
             "key": "mongodb-install-4 - Install the MongoDB packages",
+            "comment_disabled": "Seems to be working fine with Ubuntu 20.04 LTS",
+            "disabled": true,
             "user": "root",
             "path": "/var/services/",
             "command": "apt-get install -y mongodb-org",
             "_tags": [
                 "mongodb",
+                "before_ubuntu_20",
                 "install"
             ],
             "hosts": [
                 "instances",
-                "litterra"
+                "litterra",
+                "colaboflow"
             ]
         },
         {
-            "key": "mongodb-install-5 - Activate",
+            "key": "mongodb-install-5 - Activate-before-ubuntu-20",
+            "comment_disabled": "Name in Ubuntu 20.04 LTS changed to mongodb",
+            "disabled": true,
             "user": "root",
             "path": "/var/services/",
             "command": "systemctl start mongod",
             "_tags": [
                 "mongodb",
+                "before_ubuntu_20",
                 "install"
             ],
             "hosts": [
                 "instances",
-                "litterra"
+                "litterra",
+                "colaboflow"
             ]
         },
         {
-            "key": "mongodb-install-6 - Check the status",
+            "key": "mongodb-install-5 - Activate-after-ubuntu-20",
+            "comment_disabled": "Name in Ubuntu 20.04 LTS changed to mongodb",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "systemctl start mongodb",
+            "_tags": [
+                "mongodb",
+                "from_ubuntu_20",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra",
+                "colaboflow"
+            ]
+        },
+        {
+            "key": "mongodb-install-6 - Check the status-before-ubuntu-20",
+            "comment_disabled": "Name in Ubuntu 20.04 LTS changed to mongodb",
+            "disabled": true,
             "user": "root",
             "path": "/var/services/",
             "command": "systemctl is-active --quiet mongod",
@@ -93,7 +136,24 @@
             ],
             "hosts": [
                 "instances",
-                "litterra"
+                "litterra",
+                "colaboflow"
+            ]
+        },
+        {
+            "key": "mongodb-install-6 - Check the status-after-ubuntu-20",
+            "comment_disabled": "Name in Ubuntu 20.04 LTS changed to mongodb",
+            "user": "root",
+            "path": "/var/services/",
+            "command": "systemctl is-active --quiet mongodb",
+            "_tags": [
+                "mongodb",
+                "install"
+            ],
+            "hosts": [
+                "instances",
+                "litterra",
+                "colaboflow"
             ]
         },
         {
@@ -107,7 +167,9 @@
             "hosts": [
                 "instances",
                 "blogs",
-                "litterra"
+                "litterra",
+                "colaboflow",
+                "orchestrators"
             ]
         },
         {
@@ -121,7 +183,78 @@
             "hosts": [
                 "instances",
                 "blogs",
-                "litterra"
+                "litterra",
+                "colaboflow",
+                "orchestrators"
+            ]
+        },
+        {
+            "key": "wiki-install-download",
+            "path": "/tmp",
+            "command": "wget -O mediawiki.tar.gz https://releases.wikimedia.org/mediawiki/1.34/mediawiki-1.34.1.tar.gz",
+            "_tags": [
+                "install"
+            ],
+            "hosts": [
+                "wikis"
+            ]
+        },
+        {
+            "key": "wiki-install-unpack-1",
+            "path": "/tmp",
+            "command": "rm -rf mediawiki",
+            "_tags": [
+                "install"
+            ],
+            "hosts": [
+                "wikis"
+            ]
+        },
+        {
+            "key": "wiki-install-unpack-2",
+            "path": "/tmp",
+            "command": "mkdir mediawiki",
+            "_tags": [
+                "install"
+            ],
+            "hosts": [
+                "wikis"
+            ]
+        },
+        {
+            "key": "wiki-install-unpack-3",
+            "path": "/tmp",
+            "command_comment": "this doesn't work on all distros, https://unix.stackexchange.com/questions/11018/how-to-choose-directory-name-during-untarring",
+            "command": "tar xvzf mediawiki.tar.gz -C mediawiki --strip-components 1",
+            "_tags": [
+                "install"
+            ],
+            "hosts": [
+                "wikis"
+            ]
+        },
+        {
+            "key": "wiki-copy-wiki-colabo-discuss-1",
+            "path": "/tmp",
+            "command_comment": "this should be done in a smarter way, either through nginx playbook, or without repetition for each wiki",
+            "command": "mkdir -p /var/www/wiki-colabo-discuss/",
+            "_tags": [
+                "install"
+            ],
+            "hosts": [
+                "wikis"
+            ]
+        },
+        {
+            "key": "wiki-copy-wiki-colabo-discuss-2",
+            "path": "/tmp",
+            "user": "www-data",
+            "shell": "cp -rf /tmp/mediawiki/* /var/www/wiki-colabo-discuss/; chgroup -R developers /var/www/wiki-colabo-discuss/; chmod -R g+rwx /var/www/wiki-colabo-discuss/",
+            "_tags": [
+                "install"
+            ],
+            "hosts": [
+                "wikis"
             ]
         }
     ]
