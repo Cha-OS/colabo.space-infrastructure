@@ -13,12 +13,13 @@
         "group": "developers",
         "mode": "ug=rwX,o=rX,g+s",
         "hosts": [
-            "litterra"
+			"litterra",
+			"dev"
         ]
     }, {
         "key": "colabo",
         "repo": "https://github.com/Cha-OS/colabo/",
-        "version": "f-ai",
+        "version": "master",
         "dest": "/var/repos/colabo",
         "depth": 1,
         "force": true,
@@ -28,7 +29,8 @@
         "mode": "ug=rwX,o=rX,g+s",
         "hosts": [
             "instances",
-            "litterra"
+            "litterra",
+			"dev"
         ]
     }]
 }

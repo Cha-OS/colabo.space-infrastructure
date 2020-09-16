@@ -57,7 +57,8 @@
             "hosts": [
                 "litterra",
                 "instances",
-                "services"
+				"services",
+				"dev"
             ]
         },
         {

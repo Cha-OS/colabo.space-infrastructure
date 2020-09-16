@@ -698,6 +698,40 @@
             "hosts": [
                 "colaboflow-2"
             ]
+        },
+        {
+            "key": "flowchestra",
+            "host": "flowchestra.colabo.space",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate": {
+                "email": "chaos.ngo@gmail.com",
+                "hosts": [
+                    "flowchestra.colabo.space"
+                ]
+            },
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "type": "api",
+                "api_path": "api",
+                "proxy_pass": "http://127.0.0.1:8001",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "orchestrator-bgo"
+            ]
         }
     ]
 }

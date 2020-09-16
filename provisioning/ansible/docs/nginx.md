@@ -13,7 +13,19 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
  ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' --tags 'create_ssl' playbooks/nginx.yml
 ```
 
-# Usefull
+Example of a running command: `./certbot-auto certonly -n --expand --agree-tos -m chaos.ngo@gmail.com --webroot -w /var/www/ghost-chaos/letsencrypt --cert-name ghost-chaos -d cha-os.org -d www.cha-os.org`
+
+Failed:
+
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator webroot, Installer None
+Cert is due for renewal, auto-renewing...
+Renewing an existing certificate
+An unexpected error occurred:
+
+There were too many requests of a given type :: Error creating new order :: too many failed authorizations recently: see https://letsencrypt.org/docs/rate-limits/
+
+# Useful
 
 ```sh
 # Checking nginx config file syntax
@@ -27,7 +39,7 @@ sudo systemctl restart nginx
 
 ```json
         // will create website (`cha-os.org` with alias `cha-os.org`) 
-        // with SSL certificte for both website and alias
+        // with SSL certificate for both website and alias
         // there is also a need for an extension, `well-known`
         // in order for certbot to install the certificate properly
         {

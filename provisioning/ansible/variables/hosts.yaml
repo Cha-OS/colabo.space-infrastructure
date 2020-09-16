@@ -40,6 +40,14 @@ wikis:
         ansible_host: 158.37.63.168
         ansible_python_interpreter: /usr/bin/python3
 
+# Used for remote development
+dev:
+  hosts:
+    colabo-dev-1:
+        # web: http://dev-1.colabo.space/
+        ansible_host: 158.39.48.246
+        ansible_python_interpreter: /usr/bin/python3
+
 # Used to run wikis (Mediawiki)
 colaboflow:
   children:
