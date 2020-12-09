@@ -43,7 +43,7 @@
 
   # - name: Set a new root password
   #   https://stackoverflow.com/questions/42267299/ansible-install-mysql-5-7-set-root-user-password
-  #   mysql_user: 
+  #   mysql_user:
   #     check_implicit_admin: yes
   #     login_user: root
   #     login_password: "{{ original_mysql_root_password }}"
@@ -121,7 +121,7 @@
       state: present
       login_user: 'root'
       login_password: "{{ mysql_root_password }}"
-  
+
       # login_unix_socket: /var/run/mysqld/mysqld.sock
     # when: item.type == 'mysql.database'
 
@@ -131,17 +131,17 @@
     mysql_user:
       name: "{{item.name}}"
       append_privs: true
-      password: "{{item.password | default(omit) }}" 
+      password: "{{item.password | default(omit) }}"
       priv: "{{item.privileges}}"
       login_user: 'root'
       login_password: "{{ mysql_root_password }}"
       state: present
     # when: item.type == 'mysql.user'
-    
+
 # ----------------------------------
 # Postgres
 # ----------------------------------
-  
+
   - name: Create Postgres DBs
     with_items: "{{ items_array }}"
     when: "{{ (item.type == 'postgres') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
@@ -153,7 +153,7 @@
       # login_password: "{{ postgres_root_password }}"
     # https://stackoverflow.com/questions/25751085/postgresql-failing-peer-authentication-with-ansible
     become_user: "postgres"
-  
+
   - name: Create Postgres User
     with_items: "{{ items_array }}"
     when: "{{ (item.type == 'postgres') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching

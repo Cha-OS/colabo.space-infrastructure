@@ -26,6 +26,19 @@
             ]
         },
         {
+            "key": "b-climathon",
+            "description": "Climathon.Space Backend (node.js)",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/services/colabo-apps-climathon-bg/",
+            "exec_start": "/usr/bin/nodejs /var/services/colabo-apps-climathon-bg/index.bundle.js 8002 /var/services/colabo-apps-climathon-bg/config/global-climathon.js",
+            "hosts": [
+                "instances"
+            ]
+        },
+        {
             "key": "s-colaboflow-audit",
             "description": "ColaboFlow.Audit gRPC service",
             "user": "www-data",

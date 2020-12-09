@@ -30,7 +30,8 @@
         "hosts": [
             "instances",
             "litterra",
-			"dev"
+			"dev",
+			"climathon"
         ]
     }]
 }

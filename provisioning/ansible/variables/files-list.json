@@ -1,115 +1,125 @@
 {
-    "items_array": [{
-            "key": "/var/colabo/services",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s"
-        },
-        {
-            "key": "/etc/nginx/letsencrypt",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s"
-        },
-        {
-            "key": "/var/services/colabo-env-python2",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s"
-        },
-        {
-            "key": "/var/services/colabo-env-python3",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s"
-        },
-        {
-            "key": "/var/www/colabo",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "instances"
-            ]
-        },
-        {
-            "key": "/var/www/nltk_data",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "litterra",
-                "services"
-            ]
-        },
-        {
-            "key": "/var/repos",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "litterra",
-                "instances",
+	"items_array": [{
+			"key": "/var/colabo/services",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s"
+		},
+		{
+			"key": "/etc/nginx/letsencrypt",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s"
+		},
+		{
+			"key": "/var/services/colabo-env-python2",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s"
+		},
+		{
+			"key": "/var/services/colabo-env-python3",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s"
+		},
+		{
+			"key": "/var/www/colabo",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"instances"
+			]
+		},
+		{
+			"key": "/var/www/nltk_data",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"litterra",
+				"services"
+			]
+		},
+		{
+			"key": "/var/repos",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"litterra",
+				"instances",
 				"services",
 				"dev"
-            ]
-        },
-        {
-            "key": "/var/colabo/repos",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "litterra"
-            ]
-        },
-        {
-            "key": "/var/data/litterra",
-            "comment": "Additional storage for litterra. Should be manually created over cloud interface and mounted to the server",
-            "state": "directory",
-            "owner": "www-data",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "litterra"
-            ]
-        }, {
-            "key": "/var/www/ghost-chaos",
-            "state": "directory",
-            "owner": "ghost",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "blogs"
-            ]
-        },
-        {
-            "key": "/var/www/ghost-colabo",
-            "state": "directory",
-            "owner": "ghost",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "blogs"
-            ]
-        },
-        {
-            "key": "/var/www/ghost-boradugic",
-            "state": "directory",
-            "owner": "ghost",
-            "group": "developers",
-            "mode": "ug=rwx,o=rx,g+s",
-            "hosts": [
-                "blogs"
-            ]
-        }
-    ]
+			]
+		},
+		{
+			"key": "/var/colabo/repos",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"litterra"
+			]
+		},
+		{
+			"key": "/var/data/litterra",
+			"comment": "Additional storage for litterra. Should be manually created over cloud interface and mounted to the server",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"litterra"
+			]
+		}, {
+			"key": "/var/data/dev",
+			"comment": "Development environment for the dev servers",
+			"state": "directory",
+			"owner": "www-data",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"dev"
+			]
+		}, {
+			"key": "/var/www/ghost-chaos",
+			"state": "directory",
+			"owner": "ghost",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"blogs"
+			]
+		},
+		{
+			"key": "/var/www/ghost-colabo",
+			"state": "directory",
+			"owner": "ghost",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"blogs"
+			]
+		},
+		{
+			"key": "/var/www/ghost-boradugic",
+			"state": "directory",
+			"owner": "ghost",
+			"group": "developers",
+			"mode": "ug=rwx,o=rx,g+s",
+			"hosts": [
+				"blogs"
+			]
+		}
+	]
 }

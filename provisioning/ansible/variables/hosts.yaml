@@ -1,4 +1,4 @@
-# Usually placed in `/etc/ansible/hosts` 
+# Usually placed in `/etc/ansible/hosts`
 # or invited with explicit `-i` CLI parameter
 
 # Used to orchestrate services
@@ -43,9 +43,20 @@ wikis:
 # Used for remote development
 dev:
   hosts:
-    colabo-dev-1:
-        # web: http://dev-1.colabo.space/
+    colabo-dev-osl-1:
+        # web: https://dev-osl-1.colabo.space/
+        # host: dev-osl-1.colabo.space
         ansible_host: 158.39.48.246
+        ansible_python_interpreter: /usr/bin/python3
+    colabo-dev-bgo-1:
+        # web: https://dev-bgo-1.colabo.space/
+        # host: dev-bgo-1.colabo.space
+        ansible_host: 158.39.201.27
+        ansible_python_interpreter: /usr/bin/python3
+    colabo-dev-bgo-2:
+        # web: https://dev-bgo-2.colabo.space/
+        # host: dev-bgo-2.colabo.space
+        ansible_host: 158.39.201.103
         ansible_python_interpreter: /usr/bin/python3
 
 # Used to run wikis (Mediawiki)

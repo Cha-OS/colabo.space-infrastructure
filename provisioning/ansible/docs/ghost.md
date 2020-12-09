@@ -5,7 +5,8 @@ This playbook installs ghost blog.
 You have to do manually following:
 
 **IMPORTANT**: Currently, password injection is not working. Therefore you should manually, set the passwords in every `database.password` parameter in the `ansible/variables/ghost-list.json` file
-**IMPORTANT**: Currently ansible doesn't work fine with prepopulated folders (due to the recursion problem with `` ansible command). Therefore:
++ ut should not be the root db pass, but rather the ghost db pass
+**IMPORTANT**: Currently ansible doesn't work fine with pre-populated folders (due to the recursion problem with `` ansible command). Therefore:
 
 1. when creating new blog: remove all other blog items from the `ansible/variables/ghost-list.json` file
     + If the procedure crashes, you should remove whole blog content on the server

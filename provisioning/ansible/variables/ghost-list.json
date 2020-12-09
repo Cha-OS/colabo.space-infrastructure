@@ -47,7 +47,31 @@
             "user": "ghost",
             "password": "<password_placeholder>"
         }
-    }, {
+	}, {
+		"key": "ghost-climathon-en",
+		"folder": "ghost-climathon",
+		"host": "climathon.colabo.space",
+		"port": 25015,
+		"language": "en",
+		"user": "ghost",
+		"database": {
+			"db": "ghost_climathon_en",
+			"user": "ghost",
+			"password": "<password_placeholder>"
+		}
+	}, {
+		"key": "ghost-climathon-sr",
+		"folder": "ghost-climathon",
+		"host": "climathon.colabo.space",
+		"port": 25016,
+		"language": "sr",
+		"user": "ghost",
+		"database": {
+			"db": "ghost_climathon_sr",
+			"user": "ghost",
+			"password": "<password_placeholder>"
+		}
+	}, {
         "key": "ghost-boradugic-en",
         "folder": "ghost-boradugic",
         "host": "boradugic.colabo.space",

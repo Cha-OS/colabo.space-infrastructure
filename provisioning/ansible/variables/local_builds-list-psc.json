@@ -1,6 +1,7 @@
 {
     "items_array": [{
         "key": "performing_sustainable_coevolution",
+		"type": "angular",
         "path": "../../../../colabo/src/frontend/apps/psc/",
         "basehref": "/",
         "hosts": [

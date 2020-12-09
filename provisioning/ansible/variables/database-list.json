@@ -16,6 +16,20 @@
         }, {
             "key": "database",
             "type": "mysql.database",
+            "name": "ghost_climathon_en",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
+            "name": "ghost_climathon_sr",
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "database",
+            "type": "mysql.database",
             "name": "ghost_chaos_en",
             "hosts": [
                 "blogs"
@@ -125,6 +139,23 @@
             "type": "mysql.user",
             "name": "ghost",
             "privileges": 'ghost_colabo_sr.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "password": "<auto-injected>",
+            "privileges": 'ghost_climathon_en.*:ALL',
+            "hosts": [
+                "blogs"
+            ]
+        }, {
+            "key": "user",
+            "type": "mysql.user",
+            "name": "ghost",
+            "privileges": 'ghost_climathon_sr.*:ALL',
             "hosts": [
                 "blogs"
             ]

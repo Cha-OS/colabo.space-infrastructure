@@ -17,7 +17,7 @@
   gather_facts: false
 
   tasks:
-  
+
   - import_tasks: "include/_debug_active_hosts.yml"
     tags: [debug]
 
@@ -29,12 +29,13 @@
   # -----------------------------------
   - name: Report angular cli command
     with_items: "{{ items_array }}"
-    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    when: "{{ (item.type == 'angular') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check task type and hosts matching
     debug:
         msg: "{{COMMAND_NG + ' --base-href ' + item.basehref if item.basehref is defined else COMMAND_NG }}"
+
   - name: Run angular cli build (on local machine)
     with_items: "{{ items_array }}"
-    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    when: "{{ (item.type == 'angular') and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check task type and hosts matching
     # https://docs.ansible.com/ansible/latest/modules/command_module.html
     command: "{{COMMAND_NG + ' --base-href ' + item.basehref if item.basehref is defined else COMMAND_NG }}"
     args:

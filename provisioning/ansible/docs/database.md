@@ -2,7 +2,7 @@
 
 This playbook creates databases, database users, etc
 
-**IMPORTANT**: At the moment there is no automatic injection/replacement of the password, so we need to do it manually in the file `colabo.space-infrastructure/provisioning/ansible/playbooks/database.yml`, but NOT COMMIT the file with the correct password.
+**IMPORTANT**: At the moment there is no automatic injection/replacement of the password, so we need to do it manually in the file `colabo.space-infrastructure/provisioning/ansible/playbooks/database.yml`, but **DO NOT COMMIT** the file with the correct password.
 
 `mysql_root_password: "<root_password_placeholder>"` into `mysql_root_password: "correct_password_goes_here"`
 
@@ -39,6 +39,12 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
                 "blogs"
             ]
         }
+```
+
+Login:
+
+```sh
+mysql -ughost -p
 ```
 
 ## Postgres

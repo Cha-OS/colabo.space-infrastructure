@@ -59,7 +59,8 @@
                 "email": "chaos.ngo@gmail.com",
                 "hosts": [
                     "colabo.space",
-                    "www.colabo.space"
+					"www.colabo.space",
+					"climathon.colabo.space"
                 ]
             },
             "extensions": [{
@@ -90,7 +91,46 @@
             "hosts": [
                 "blogs"
             ]
-        }, {
+		}, {
+			"key": "ghost-climathon",
+			"host": "climathon.colabo.space",
+			"aliases": "",
+			"web_root": {
+				"owner": "www-data",
+				"group": "developers",
+				"mode": "u=rwx,g=rwxs,o=rx"
+			},
+			"certificate_comment": "realized through ghost-colabo website certificate",
+			"certificate_reference": "ghost-colabo",
+			"extensions": [{
+				"key": "well-known",
+				"type": "well-known",
+				"placeholder": "server_placeholder"
+			}, {
+				"key": "ghost-en",
+				"type": "ghost",
+				"main": true,
+				"placeholder": "server_placeholder",
+				"language": "en",
+				"port": 25015
+			}, {
+				"key": "ghost-sr",
+				"type": "ghost",
+				"placeholder": "server_placeholder",
+				"language": "sr",
+				"port": 25016
+			},
+			{
+				"key": "ghost-redirect",
+				"type": "redirect",
+				"placeholder": "server_placeholder",
+				"from": "^/(?!(en|sr|data))",
+				"to": "/en$request_uri"
+			}],
+			"hosts": [
+				"blogs"
+			]
+		}, {
             "key": "ghost-boradugic",
             "host": "boradugic.com",
             "aliases": "www.boradugic.com boradugic.colabo.space",
@@ -286,7 +326,9 @@
                     "psc-test.colabo.space",
                     "clm.colabo.space",
                     "clm-test.colabo.space",
-                    "manager.colabo.space"
+					"manager.colabo.space",
+					"climathon-bg.colabo.space",
+					"climathon-apps.colabo.space"
                 ]
             },
             "extensions": [{
@@ -357,6 +399,60 @@
             "key": "colabo-apps-clm",
             "host": "clm.colabo.space",
             "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+			]
+		}, {
+			"key": "climathon-space-apps-backend",
+			"host": "climathon-apps.colabo.space",
+			"aliases": "",
+			"description": "Backend (API) services for Climathon.Space (for multiple instances, Belgrade, Oslo, ...)",
+			"web_root": {
+				"owner": "www-data",
+				"group": "developers",
+				"mode": "u=rwx,g=rwxs,o=rx"
+			},
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+			"extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "type": "api",
+                "api_path": "api",
+                "proxy_pass": "http://127.0.0.1:8002",
+                "placeholder": "server_placeholder"
+            }],
+			"hosts": [
+				"instances"
+			]
+		}, {
+            "key": "colabo-apps-climathon-bg",
+            "host": "climathon-bg.colabo.space",
+			"aliases": "",
+			"description": "Climathon Belgrade frontend app interface",
             "web_root": {
                 "owner": "www-data",
                 "group": "developers",
@@ -528,8 +624,7 @@
             "hosts": [
                 "litterra"
             ]
-        },
-        {
+        }, {
             "key": "legacy.litterra",
             "host": "legacy.litterra.net",
             "aliases": "",

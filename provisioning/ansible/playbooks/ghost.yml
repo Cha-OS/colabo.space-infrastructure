@@ -41,7 +41,7 @@
       mode: 'ug=rwx,o=rx,g+s'
       recurse: yes
     tags: [install]
-  
+
   - name: INSTALL ghost
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
@@ -74,7 +74,7 @@
       mode: 'ug=rwx,o=rx,g+s'
       recurse: yes
     tags: [install]
-  
+
   - name: Create ghost root file
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
@@ -87,7 +87,7 @@
       mode: 'ug=rwx,o=,g+s' # not readable for others
       recurse: no
     tags: [install]
-  
+
   - name: CONFIGure the ghost (with ghost CLI command)`
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
@@ -108,7 +108,7 @@
   # Loading and extending `<ghost_folder>/.ghost-cli` files
   # -----------------------------------------------------
 
-  # edit /var/www/ghost-colabo/en/.ghost-cli  
+  # edit /var/www/ghost-colabo/en/.ghost-cli
   # THIS IS NOT USED, JUST AN ALTERNATIVE FOR FETCH
   # - name: load .ghost-cli from the remote host into local variable
   #   with_items: "{{ items_array }}"
@@ -116,7 +116,7 @@
   #     src: "/var/www/{{item.folder}}/{{item.language}}/.ghost-cli"
   #   register: loaded_vars[{{item.key}}][{{item.language}}]
 
-  # edit /var/www/ghost-colabo/en/.ghost-cli  
+  # edit /var/www/ghost-colabo/en/.ghost-cli
   - name: load .ghost-cli from remote host into local file
     with_items: "{{ items_array }}"
     fetch:
@@ -159,9 +159,9 @@
   - name: convert loaded .ghost-cli-s from array to dict + extending dicts
     with_items: "{{ loaded_vars }}"
     set_fact:
-      loaded_vars_dict: "{{ loaded_vars_dict 
+      loaded_vars_dict: "{{ loaded_vars_dict
       | combine({
-          item.key: item.value 
+          item.key: item.value
           | combine({
             'name': item.key,
             'running': 'production'
@@ -179,8 +179,8 @@
   - name: write loaded .ghost-cli-s as dict to remote file
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
-    copy: 
-      content: "{{ loaded_vars_dict[item.key] | to_nice_json }}" 
+    copy:
+      content: "{{ loaded_vars_dict[item.key] | to_nice_json }}"
       dest: "/var/www/{{item.folder}}/{{item.language}}/.ghost-cli"
     tags: [always]
 
@@ -229,4 +229,4 @@
     args:
       chdir: "/var/www/{{item.folder}}/{{item.language}}"
     become_user: "orchestrator"
-    tags: [install]
+    tags: [install, update]

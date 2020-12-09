@@ -182,7 +182,7 @@ https://check-your-website.server-daten.de/?q=litterra.net
 <img "Bukvik" src="http://bukvik.litterra.net/images/logo/bukvik%20logo.jpg" width="15%" />
 ```
 
-### Miscelaneous
+### Miscellaneous
 
 Check your website:
 + https://check-your-website.server-daten.de/?q=litterra.net

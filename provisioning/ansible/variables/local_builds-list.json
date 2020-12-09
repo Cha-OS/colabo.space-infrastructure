@@ -1,6 +1,7 @@
 {
     "items_array": [{
         "key": "performing_sustainable_coevolution",
+		"type": "angular",
         "path": "../../../../colabo/src/frontend/apps/psc/",
         "basehref": "/",
         "hosts": [
@@ -8,6 +9,7 @@
         ]
     },{
         "key": "colaboflow-frontend",
+		"type": "angular",
         "path": "../../../../colabo/src/frontend/demos/colaboflow/",
         "basehref": "/",
         "hosts": [
@@ -15,6 +17,7 @@
         ]
     },{
         "key": "litterra-frontend",
+		"type": "angular",
         "path": "../../../../../LitTerra-zontik/LitTerra/src/frontend/apps/litterra/",
         "basehref": "/",
         "hosts": [
