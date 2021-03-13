@@ -315,7 +315,7 @@ try to go to regular page: ``
 The certbot documentation recommends running a cron job twice per day to renew certificates. Let’s Encrypt will only renew certificates if they are due to expire, so it’s safe and good practice to run the renewal frequently.
 
 ```sh
-sudo joe /etc/cron.d/letsencrypt                      
+sudo joe /etc/cron.d/letsencrypt                     
 #<START>
 # Run the letsencrypt renewal service using certbot-auto.
 # once per day at 6:08am

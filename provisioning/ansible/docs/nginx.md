@@ -10,7 +10,9 @@ Each key in the `items_array` represents the folder inside the `/var/www` that w
 ```sh
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/nginx.yml
 
- ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' --tags 'create_ssl' playbooks/nginx.yml
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["blogs"]}' --tags 'create_ssl' playbooks/nginx.yml
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["blogs"]}' --tags 'create_nginx_config' playbooks/nginx.yml
 ```
 
 Example of a running command: `./certbot-auto certonly -n --expand --agree-tos -m chaos.ngo@gmail.com --webroot -w /var/www/ghost-chaos/letsencrypt --cert-name ghost-chaos -d cha-os.org -d www.cha-os.org`

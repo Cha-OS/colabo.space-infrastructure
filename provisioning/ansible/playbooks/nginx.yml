@@ -137,7 +137,7 @@
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
     set_fact:
-      rendered_template: "{{ rendered_template 
+      rendered_template: "{{ rendered_template
       | combine({
         item.key: {
           'main_template_pressl_final': lookup('template', '../templates/nginx-config-pressl.j2'),
@@ -168,7 +168,7 @@
     copy: content="{{ rendered_template[item.key]['main_template_pressl_final'] }}" dest="/etc/nginx/sites-available/{{ item.key }}-pressl"
     tags: [create_host, create_ssl]
 
-  - name: remove ssl config from `/etc/nginx/sites-enabled` 
+  - name: remove ssl config from `/etc/nginx/sites-enabled`
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
@@ -177,7 +177,7 @@
       state: absent
     tags: [create_host, create_ssl]
 
-  - name: link pressl config into `/etc/nginx/sites-enabled` 
+  - name: link pressl config into `/etc/nginx/sites-enabled`
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
@@ -244,12 +244,12 @@
 
   - name: Set initial ssl templates 'main_template_ssl_final' to 'main_template_ssl'
     when: "{{ (item.certificate is defined or item.certificate_reference is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
-    # it is basically: 
+    # it is basically:
     # rendered_template[item.key]['main_template_ssl_final']
     #   = rendered_template[item.key]['main_template_ssl']
     with_items: "{{ items_array }}"
     set_fact:
-      rendered_template: "{{ rendered_template 
+      rendered_template: "{{ rendered_template
       | combine({
         item.key: {
           'main_template_ssl_final': rendered_template[item.key]['main_template_ssl']
@@ -275,11 +275,11 @@
     when: "{{ (item.0.hosts is not defined or ((active_hosts_groups | intersect(item.0.hosts)) | length>0)) }}" # check hosts matching
     # rendered_template[item.0.key]['extension_templates'][item.1.key] = <rendered_template>
     set_fact:
-      rendered_template: "{{ rendered_template 
-      | combine({ 
+      rendered_template: "{{ rendered_template
+      | combine({
         item.0.key: {
           'extension_templates': {
-            item.1.key: lookup('template', '../templates/nginx-config-extension-{{ item.1.type }}.j2') 
+            item.1.key: lookup('template', '../templates/nginx-config-extension-{{ item.1.type }}.j2')
           }
         }
       }, recursive=True)
@@ -305,11 +305,11 @@
     when: "{{ (item.0.hosts is not defined or ((active_hosts_groups | intersect(item.0.hosts)) | length>0)) }}" # check hosts matching
     # merges all templates from rendered_template[item.0.key]['extension_templates'][*] into rendered_template[item.0.key]['main_template_ssl_final']
     set_fact:
-      rendered_template: "{{ rendered_template 
-      | combine({ 
+      rendered_template: "{{ rendered_template
+      | combine({
         item.0.key: {
           'main_template_ssl_final': rendered_template[item.0.key]['main_template_ssl_final'] | regex_replace('#__'+item.1.placeholder+'__',
-          '# extension:' +item.1.key+ '(type:' +item.1.type+ ')\r\n' + rendered_template[item.0.key]['extension_templates'][item.1.key] +'\r\n#__'+item.1.placeholder+'__') 
+          '# extension:' +item.1.key+ '(type:' +item.1.type+ ')\r\n' + rendered_template[item.0.key]['extension_templates'][item.1.key] +'\r\n#__'+item.1.placeholder+'__')
         }
       }, recursive=True)
       }}"
@@ -337,7 +337,7 @@
     copy: content="{{ rendered_template[item.key]['main_template_ssl_final'] }}" dest="/etc/nginx/sites-available/{{ item.key }}"
     tags: [create_host, create_nginx_config]
 
-  - name: remove PRESSL config from `/etc/nginx/sites-enabled` 
+  - name: remove PRESSL config from `/etc/nginx/sites-enabled`
     when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
     with_items: "{{ items_array }}"
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
