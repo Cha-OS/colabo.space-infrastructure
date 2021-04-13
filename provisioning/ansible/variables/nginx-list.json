@@ -603,7 +603,9 @@
                     "legacy.litterra.net",
                     "bukvik.litterra.net",
                     "cvrkut.litterra.net",
-                    "perlaj.litterra.net"
+                    "perlaj.litterra.net",
+					"rc.litterra.net",
+					"rc-apps.litterra.net"
                 ]
             },
             "extensions": [{
@@ -745,7 +747,60 @@
             "hosts": [
                 "litterra"
             ]
-        },{
+        }, {
+            "key": "rc.litterra",
+            "host": "rc.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through read.litterra website certificate",
+            "certificate_reference": "read.litterra",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "rc"
+            ]
+        }, {
+			"key": "rc-apps-litterra-backend",
+			"host": "rc-apps.litterra.net",
+			"aliases": "",
+			"description": "Backend (API) services for rc.litterra.net",
+			"web_root": {
+				"owner": "www-data",
+				"group": "developers",
+				"mode": "u=rwx,g=rwxs,o=rx"
+			},
+            "certificate_comment": "realized through read.litterra.net website certificate",
+            "certificate_reference": "read.litterra",
+			"extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "type": "api",
+                "api_path": "api",
+                "proxy_pass": "http://127.0.0.1:8003",
+                "placeholder": "server_placeholder"
+            }],
+			"hosts": [
+				"rc"
+			]
+		}, {
             "key": "wiki-colabo-discuss",
             "host": "discuss-wiki.colabo.space",
             "aliases": "discuss-wiki.colabo.space",

@@ -155,9 +155,23 @@
 			"hosts": ["instances", "climathon"]
 		},
 		{
-			"key": "climathon-backend-config",
-			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/backend/global-server-climathon.js",
-			"dest": "/var/services/colabo-apps-climathon-bg/config/global-climathon.js",
+			"key": "rc-frontend",
+			"src": "../../../../colabo/src/frontend/apps/colaboflow-app/dist/",
+			"dest": "/var/www/rc.litterra/",
+			"delete": true,
+			"mode": "push",
+			"recursive": true,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "directory",
+			"_tags": ["frontend"],
+			"hosts": ["rc"]
+		},
+		{
+			"key": "rc-backend",
+			"src": "../../../../colabo/src/backend/apps/colabo-space/build/index.bundle.js",
+			"dest": "/var/services/litterra-apps-rc/index.bundle.js",
 			"delete": false,
 			"mode": "push",
 			"recursive": false,
@@ -166,7 +180,21 @@
 			"file_mode": "ug=rwX,o=rX,g+s",
 			"file_state": "file",
 			"_tags": ["backend"],
-			"hosts": ["instances", "climathon"]
+			"hosts": ["rc"]
+		},
+		{
+			"key": "rc-backend-config",
+			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/backend/global-server-rc.js",
+			"dest": "/var/services/litterra-apps-rc/config/global-rc.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["rc"]
 		},
 		{
 			"key": "colaboflow-demo-app",

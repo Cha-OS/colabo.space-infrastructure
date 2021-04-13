@@ -39,6 +39,19 @@
             ]
         },
         {
+            "key": "b-rc",
+            "description": "Retracing Connections Backend (node.js)",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/services/litterra-apps-rc/",
+            "exec_start": "/usr/bin/nodejs /var/services/litterra-apps-rc/index.bundle.js 8003 /var/services/litterra-apps-rc/config/global-rc.js",
+            "hosts": [
+                "rc"
+            ]
+        },
+        {
             "key": "s-colaboflow-audit",
             "description": "ColaboFlow.Audit gRPC service",
             "user": "www-data",
