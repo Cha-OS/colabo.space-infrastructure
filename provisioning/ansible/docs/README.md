@@ -198,6 +198,8 @@ mkdir -p /var/www/ac-mediator/letsencrypt
 
 ### Generating certificate
 
+On issuing please check [certificate.md](../../../certificates/certificate.md#Updating)
+certificate.md
 ```sh
 sudo joe /etc/nginx/sites-available/ac-mediator
 

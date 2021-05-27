@@ -1,6 +1,34 @@
-## Certificates
+# Updating
 
-### Installing
+```sh
+cdz
+cd colabo.space-infrastructure/provisioning/ansible
+
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["blogs"]}' --tags 'create_ssl' playbooks/nginx.yml
+```
+
+## Problems
+
+### Automatic cron
+
+On read.litterra.net cron triggers and renews certificates. On blogs like cha-os.org and colabo.space, ... it doesn't
+
+### Manual updating failed
+
+if it fails we can:
++ check if nginx is up
++ check if ghosts are up
++ check if mysql db is up (should be reported by ghost anyway I guess)
++ check if nginx has ssl (not pre-ssl) versions of configs in its `sites-enabled` folder
+
+If nginx is broken you can do full procedure instead (which is idempotent)
+
+```sh
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["blogs"]}' --tags 'create_ssl' playbooks/nginx.yml
+```
+
+# Installing
 
 ```sh
 cd /etc/nginx

@@ -4,7 +4,8 @@
 
 This playbook installs nginx and configures all hosts
 
-Each key in the `items_array` represents the folder inside the `/var/www` that will be used 
+Each key in the `items_array` represents the folder inside the `/var/www` that will be used
+
 # Run
 
 ```sh
@@ -70,9 +71,9 @@ sudo systemctl restart nginx
 ```
 ## Certificates
 
-We support certificates through certbot. They are automatically renewed (NOTE: we used to have problems, so please check if they are renowed. If you get expiration warning email from certbot, that is usually bad sign).
+We support certificates through certbot. They are automatically renewed (NOTE: we used to have problems, so please check if they are renewed. If you get expiration warning email from certbot, that is usually bad sign).
 
-Currently (and proable forever :) ) you HAVE to have certificate for the website! :) Although, it is not complicated to remove that restriction. 
+Currently (and probably forever :) ) you HAVE to have certificate for the website! :) Although, it is not complicated to remove that restriction. 
 
 You can:
 1. CREATE a new certificate for the website and its aliases
@@ -112,7 +113,7 @@ You can:
 }
 ```
 
-**IMPORTANT**: In this case we have to extend the refered certificate with all aliases hosts of the website that refers to another host's certificate
+**IMPORTANT**: In this case we have to extend the referred certificate with all aliases hosts of the website that refers to another host's certificate
 
 ### Issues
 
@@ -141,7 +142,7 @@ sudo systemctl restart nginx
 
 #### To many sites-available
 
-+ check the `/etc/nginx/sites-available` if there are any duplicated or wrongly dirtected sites, as that might be missleading for the certbot
++ check the `/etc/nginx/sites-available` if there are any duplicated or wrongly directed sites, as that might be misleading for the certbot
 
 ## Extensions
 

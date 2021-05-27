@@ -2,6 +2,10 @@
 
 ## Certificates
 
+### Updating
+
+see [certificate.md](./certificate.md#Updating)
+
 ### Installing
 
 ```sh
@@ -435,7 +439,6 @@ sudo ./certbot-auto certonly --agree-tos -m chaos.ngo@gmail.com --webroot \
 ```
 
 You can add the flag ` --staging --break-my-certs ` to increase access limits
-
 
 ## Additional domains on the cha-oa.org NGINX server
 
