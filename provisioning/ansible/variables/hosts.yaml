@@ -108,6 +108,12 @@ litterra:
 # Synonym for LitTerra (at the moment)
 rc:
   hosts:
-    litterra-1:
+    rc-1:
       ansible_host: 158.39.48.39
+      ansible_python_interpreter: /usr/bin/python3
+
+laza:
+  hosts:
+    chaos-dev-1:
+      ansible_host: 46.4.89.210
       ansible_python_interpreter: /usr/bin/python3

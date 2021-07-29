@@ -21,7 +21,7 @@
 
   - import_tasks: "include/_load_host_speciffic_data.yml"
     tags: [always]
-  
+
   # -----------------------------------
   # Real transfers tasks
   # -----------------------------------
@@ -30,7 +30,7 @@
   #   # NOTE: The copy module recursively copy facility does not scale to lots (>hundreds) of files. For alternative, see synchronize module, which is a wrapper around rsync
   #   # https://docs.ansible.com/ansible/latest/modules/synchronize_module.html
   #   with_items: "{{ items_array }}"
-  #   when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+  #   when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
   #   copy:
   #     src: "{{item.src}}"
   #     dest: "{{item.dest}}"
@@ -48,15 +48,15 @@
     loop: "{{ items_array|flatten(levels=1) }}"
     loop_control:
       index_var: index
-    when: "{{ item.file_state == 'file' and item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    when: "{{ item.file_state == 'file' and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
     # set_fact:
-    #   item: "{{ item 
+    #   item: "{{ item
     #   | combine({
     #     'folder_path': 'item.dest | regex_replace('^(.*)/[^\/]+$', '\\1'')
     #   }, recursive=True)
     #   }}"
     set_fact:
-      folder_paths: "{{ folder_paths 
+      folder_paths: "{{ folder_paths
       | combine({
           item.key: item.dest | regex_replace('^(.*)/[^\/]+$', '\\1')
       }, recursive=True)
@@ -73,7 +73,7 @@
   - name: Ensure destination exists for `file` type of destination
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
     with_items: "{{ items_array }}"
-    when: "{{ item.file_state == 'file' and item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    when: "{{ item.file_state == 'file' and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
     file:
       path: '{{folder_paths[item.key]}}'
       state: 'directory'
@@ -85,7 +85,7 @@
   - name: Transfer content (using synchronize)
     # https://docs.ansible.com/ansible/latest/modules/synchronize_module.html
     with_items: "{{ items_array }}"
-    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
     synchronize:
       archive: true
       checksum: true
@@ -96,12 +96,12 @@
       dest: "{{item.dest}}"
       recursive: "{{item.recursive}}"
       mode: "{{item.mode}}"
-      # rsync_opts: 
+      # rsync_opts:
       # - '--relative'
 
   - name: Set transfered files privileges
     with_items: "{{ items_array }}"
-    when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching
+    when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
     # https://docs.ansible.com/ansible/latest/modules/file_module.html
     file:
       path: '{{item.dest}}'
