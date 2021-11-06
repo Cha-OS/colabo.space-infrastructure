@@ -14,6 +14,12 @@ with
 when: "{{ (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) and (active_tags is not defined or ((active_tags | intersect(item._tags)) | length>0) ) }}" # check `hosts` and `_tags` matching
 ```
 
+then call with `active_tags` array as an `extra -vars`:
+
+```sh
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["dev_tickerai"], "active_tags": ["backend"]}' playbooks/transfers.yml
+```
+
 # active_hosts_groups
 
 ```txt
@@ -362,7 +368,6 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
 # evaluate
 nginx -v
 ```
-
 
 ## nginx
 

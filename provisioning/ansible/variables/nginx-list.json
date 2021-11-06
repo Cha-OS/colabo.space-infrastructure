@@ -598,12 +598,12 @@
             "certificate": {
                 "email": "chaos.ngo@gmail.com",
                 "hosts": [
-                    "read.litterra.net",
-                    "druzba.litterra.net",
-                    "legacy.litterra.net",
-                    "bukvik.litterra.net",
-                    "cvrkut.litterra.net",
-                    "perlaj.litterra.net",
+					"read.litterra.net",
+					"druzba.litterra.net",
+					"legacy.litterra.net",
+					"bukvik.litterra.net",
+					"cvrkut.litterra.net",
+					"perlaj.litterra.net",
 					"rc.litterra.net",
 					"rc-apps.litterra.net"
                 ]

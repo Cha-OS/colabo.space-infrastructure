@@ -5,7 +5,37 @@ cdz
 cd colabo.space-infrastructure/provisioning/ansible
 
 
+For: bukvik.litterra.net, cvrkut.litterra.net, druzba.litterra.net, legacy.litterra.net, perlaj.litterra.net, rc-apps.litterra.net, rc.litterra.net, read.litterra.net
+
+For: cha-os.org, colabo.space, remakingtesla.com, savamrkalj.colabo.space, savamrkalj.com, tesla.colabo.space, www.cha-os.org, www.colabo.space, www.remakingtesla.com, www.savamrkalj.com
+
+For `blogs`: climathon.colabo.space, colabo.space, litterra.net, sasarudan.com, www.colabo.space, www.litterra.net, www.sasarudan.com
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["blogs"]}' playbooks/nginx.yml
+
 ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["blogs"]}' --tags 'create_ssl' playbooks/nginx.yml
+
+# For `instances`: 
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' --tags 'create_ssl' playbooks/nginx.yml
+
+# For: read.litterra.net, druzba.litterra.net, legacy.litterra.net, bukvik.litterra.net, cvrkut.litterra.net, perlaj.litterra.net, rc.litterra.net, rc-apps.litterra.net
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' --tags 'create_ssl' playbooks/nginx.yml
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["litterra"]}' playbooks/nginx.yml
+
+For: apps.colabo.space, puzzles.colabo.space, psc.colabo.space, psc-test.colabo.space, clm.colabo.space, clm-test.colabo.space, manager.colabo.space, climathon-bg.colabo.space, climathon-apps.colabo.space
+
+ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem --extra-vars '{"active_hosts_groups": ["instances"]}' playbooks/nginx.yml
+
+
+rc
+wikis
+
+colaboflow-1
+colaboflow-2
+orchestrator-bgo
 ```
 
 ## Problems
