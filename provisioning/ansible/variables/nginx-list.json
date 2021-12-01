@@ -328,7 +328,13 @@
                     "clm-test.colabo.space",
 					"manager.colabo.space",
 					"climathon-bg.colabo.space",
-					"climathon-apps.colabo.space"
+					"climathon-apps.colabo.space",
+					"clm-flow.colabo.space",
+					"climathon-flow.colabo.space",
+					"clm-flow-api.colabo.space",
+					"climathon-flow-api.colabo.space",
+					"flow.litterra.net",
+					"flow-api.litterra.net"
                 ]
             },
             "extensions": [{
@@ -467,6 +473,60 @@
             }, {
                 "key": "well-known",
                 "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+		}, {
+            "key": "colabo-apps-clm-flow",
+            "host": "clm-flow.colabo.space",
+			"aliases": "climathon-flow.colabo.space",
+			"description": "Climathon Flow frontend app interface",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+		}, {
+            "key": "colabo-apps-clm-flow-api",
+            "host": "clm-flow-api.colabo.space",
+			"aliases": "climathon-flow-api.colabo.space",
+			"description": "Climathon Flow API interface",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "type": "api",
+                "api_path": "api",
+                "proxy_pass": "http://127.0.0.1:8810",
                 "placeholder": "server_placeholder"
             }],
             "hosts": [
@@ -746,6 +806,59 @@
             }],
             "hosts": [
                 "litterra"
+            ]
+        }, {
+            "key": "flow.litterra",
+            "host": "flow.litterra.net",
+            "aliases": "",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through colabo-apps website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
+            ]
+		}, {
+            "key": "litterra-apps-flow-api",
+            "host": "flow-api.litterra.net",
+			"aliases": "",
+			"description": "LitTerra Flow API interface",
+            "web_root": {
+                "owner": "www-data",
+                "group": "developers",
+                "mode": "u=rwx,g=rwxs,o=rx"
+            },
+            "certificate_comment": "realized through colabo-apps.net website certificate",
+            "certificate_reference": "colabo-apps",
+            "extensions": [{
+                "key": "location",
+                "type": "location",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "well-known",
+                "type": "well-known",
+                "placeholder": "server_placeholder"
+            }, {
+                "key": "api",
+                "type": "api",
+                "api_path": "api",
+                "proxy_pass": "http://127.0.0.1:8710",
+                "placeholder": "server_placeholder"
+            }],
+            "hosts": [
+                "instances"
             ]
         }, {
             "key": "rc.litterra",

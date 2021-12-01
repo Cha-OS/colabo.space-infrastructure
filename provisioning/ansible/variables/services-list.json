@@ -52,6 +52,32 @@
             ]
         },
         {
+            "key": "b-climathon-flow",
+            "description": "Climathon Flow Backend (node.js)",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/services/colabo-apps-climathon-flow/",
+            "exec_start": "/usr/bin/nodejs /var/services/colabo-apps-climathon-flow/index.bundle.js 8810 /var/services/colabo-apps-climathon-flow/config/global-climathon-flow.js",
+            "hosts": [
+                "instances"
+            ]
+        },
+        {
+            "key": "b-litterra-flow",
+            "description": "LitTerra Flow Backend (node.js)",
+            "user": "www-data",
+            "group": "developers",
+            "env": "",
+            "service_path": "/var/services",
+            "working_dir": "/var/services/litterra-apps-flow/",
+            "exec_start": "/usr/bin/nodejs /var/services/litterra-apps-flow/index.bundle.js 8710 /var/services/litterra-apps-flow/config/global-litterra-flow.js",
+            "hosts": [
+                "instances"
+            ]
+        },
+        {
             "key": "s-colaboflow-audit",
             "description": "ColaboFlow.Audit gRPC service",
             "user": "www-data",

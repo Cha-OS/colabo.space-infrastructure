@@ -96,7 +96,7 @@
 			"file_mode": "ug=rwX,o=rX,g+s",
 			"file_state": "directory",
 			"_tags": ["frontend"],
-			"hosts": ["instances", "_litterra"]
+			"hosts": ["_instances", "_litterra"]
 		},
 		{
 			"key": "climathon-bg-frontend",
@@ -110,7 +110,7 @@
 			"file_mode": "ug=rwX,o=rX,g+s",
 			"file_state": "directory",
 			"_tags": ["frontend"],
-			"hosts": ["instances", "_litterra"]
+			"hosts": ["_instances", "_litterra"]
 		},
 		{
 			"key": "colabo-frontend-config",
@@ -124,7 +124,7 @@
 			"file_mode": "ug=rwX,o=rX,g+s",
 			"file_state": "file",
 			"_tags": ["frontend"],
-			"hosts": ["instances", "_litterra"]
+			"hosts": ["_instances", "_litterra"]
 		},
 		{
 			"key": "colabo-backend-config",
@@ -154,6 +154,8 @@
 			"_tags": ["backend"],
 			"hosts": ["instances", "climathon"]
 		},
+
+
 		{
 			"key": "rc-frontend",
 			"src": "../../../../colabo/src/frontend/apps/colaboflow-app/dist/",
@@ -183,6 +185,20 @@
 			"hosts": ["rc"]
 		},
 		{
+			"key": "rc-backend-puzzle-colabo_knalledge__b_core",
+			"src": "../../../../colabo/src/backend/dev_puzzles/knalledge/core/build/colabo_knalledge__b_core.js",
+			"dest": "/var/services/litterra-apps-rc/puzzles/colabo_knalledge__b_core.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["rc"]
+		},
+		{
 			"key": "rc-backend-config",
 			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/backend/global-server-rc.js",
 			"dest": "/var/services/litterra-apps-rc/config/global-rc.js",
@@ -196,6 +212,166 @@
 			"_tags": ["backend"],
 			"hosts": ["rc"]
 		},
+		{
+			"key": "rc-frontend-config",
+			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/frontend/global-server-rc.js",
+			"dest": "/var/www/rc.litterra/config/global.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["rc"]
+		},
+
+
+		{
+			"key": "climathon-flow-frontend",
+			"src": "../../../../colabo/src/frontend/apps/colaboflow-app/dist/",
+			"dest": "/var/www/colabo-apps-clm-flow/",
+			"delete": true,
+			"mode": "push",
+			"recursive": true,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "directory",
+			"_tags": ["frontend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "climathon-flow-backend",
+			"src": "../../../../colabo/src/backend/apps/colabo-space/build/index.bundle.js",
+			"dest": "/var/services/colabo-apps-climathon-flow/index.bundle.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "climathon-flow-backend-puzzle-colabo_knalledge__b_core",
+			"src": "../../../../colabo/src/backend/dev_puzzles/knalledge/core/build/colabo_knalledge__b_core.js",
+			"dest": "/var/services/colabo-apps-climathon-flow/puzzles/colabo_knalledge__b_core.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "climathon-flow-backend-config",
+			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/backend/global-server-climathon-flow.js",
+			"dest": "/var/services/colabo-apps-climathon-flow/config/global-climathon-flow.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "climathon-flow-frontend-config",
+			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/frontend/global-server-climathon-flow.js",
+			"dest": "/var/www/colabo-apps-clm-flow/config/global.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+
+
+		{
+			"key": "litterra-flow-frontend",
+			"src": "../../../../colabo/src/frontend/apps/colaboflow-app/dist/",
+			"dest": "/var/www/flow.litterra/",
+			"delete": true,
+			"mode": "push",
+			"recursive": true,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "directory",
+			"_tags": ["frontend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "litterra-flow-backend",
+			"src": "../../../../colabo/src/backend/apps/colabo-space/build/index.bundle.js",
+			"dest": "/var/services/litterra-apps-flow/index.bundle.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "litterra-flow-backend-puzzle-colabo_knalledge__b_core",
+			"src": "../../../../colabo/src/backend/dev_puzzles/knalledge/core/build/colabo_knalledge__b_core.js",
+			"dest": "/var/services/litterra-apps-flow/puzzles/colabo_knalledge__b_core.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "litterra-flow-backend-config",
+			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/backend/global-server-litterra-flow.js",
+			"dest": "/var/services/litterra-apps-flow/config/global-litterra-flow.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+		{
+			"key": "litterra-flow-frontend-config",
+			"src": "../../../../colabo.space-infrastructure-private/provisioning/files/frontend/global-server-litterra-flow.js",
+			"dest": "/var/www/flow.litterra/config/global.js",
+			"delete": false,
+			"mode": "push",
+			"recursive": false,
+			"file_owner": "www-data",
+			"file_group": "developers",
+			"file_mode": "ug=rwX,o=rX,g+s",
+			"file_state": "file",
+			"_tags": ["backend"],
+			"hosts": ["instances"]
+		},
+
+
 		{
 			"key": "colaboflow-demo-app",
 			"src": "../../../../colabo/src/frontend/demos/colaboflow/dist/colaboflow-demo/",
@@ -225,7 +401,7 @@
 			"file_state": "directory",
 			"_tags": ["frontend"],
 			"hosts": [
-				"litterra"
+				"_litterra"
 			]
 		}
 	]
