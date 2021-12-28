@@ -12,11 +12,11 @@
   # gather_facts: false
 
   tasks:
-  
+
   - import_tasks: "include/_debug_active_hosts.yml"
     tags: [debug]
 
-  - import_tasks: "include/_load_host_speciffic_data.yml"
+  - import_tasks: "include/_load_host_specific_data.yml"
     tags: [always]
 
   # -----------------------------------
@@ -27,8 +27,8 @@
     with_items: "{{ items_array }}"
     when: "{{ item.key_file_pem is defined and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) }}" # check hosts matching
     # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
-    copy: 
-      src: '{{ item.key_file_pem }}' 
+    copy:
+      src: '{{ item.key_file_pem }}'
       # dest: '/home/{{ansible_user_id}}/.ssh/github_key.pem'
       dest: '/home/{{ansible_user_id}}/.ssh/id_rsa'
       mode: 'ug=rw,o=,g='
@@ -37,7 +37,7 @@
     with_items: "{{ items_array }}"
     when: "{{ item.key_file_pub is defined and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) ) }}" # check hosts matching
     # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
-    copy: 
+    copy:
       src: '{{ item.key_file_pub }}'
       dest: '/home/{{ansible_user_id}}/.ssh/id_rsa.pub'
       mode: 'ug=rw,o=r,g=r'
@@ -57,7 +57,7 @@
       accept_hostkey: yes
       # key_file: '/home/{{ansible_user_id}}/.ssh/github_key.pem'
       # key_file: '/home/{{ansible_user_id}}/.ssh/id_rsa'
-  
+
   - name: Set cloned repos privileges
     with_items: "{{ items_array }}"
     when: "{{ item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) }}" # check hosts matching

@@ -17,7 +17,7 @@
   - import_tasks: "include/_debug_active_hosts.yml"
     tags: [debug]
 
-  - import_tasks: "include/_load_host_speciffic_data.yml"
+  - import_tasks: "include/_load_host_specific_data.yml"
     tags: [always]
 
   - name: enable node 13.x
@@ -49,7 +49,7 @@
       state: "absent"
 
   - name: Installs newer versions of the packages you have.
-    apt: 
+    apt:
       upgrade: yes
     # sudo: yes
 
@@ -76,7 +76,7 @@
       state: "absent"
 
   - name: Installs newer versions of the packages you have.
-    apt: 
+    apt:
       upgrade: yes
     # sudo: yes
 
@@ -94,4 +94,3 @@
     apt:
       name: "cmdtest"
       state: "absent"
-      

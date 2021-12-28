@@ -9,12 +9,12 @@
 
 - name: report-start
   debug:
-      msg: "_load_host_speciffic_data tasks imorted and starting for hosts group: {{active_hosts_groups}}"
+      msg: "_load_host_specific_data tasks imorted and starting for hosts group: {{active_hosts_groups}}"
 
 # -----------------------------------
-# Extending gits dictionary with group speciffic entries
+# Extending gits dictionary with group specific entries
 # -----------------------------------
-# - name: HOST-SPECIFFIC-VARS-1 Include group related vars
+# - name: HOST-specific-VARS-1 Include group related vars
 #   # https://docs.ansible.com/ansible/2.5/modules/include_vars_module.html
 #   include_vars: "{{ item }}"
 #   # name: testing_tags_group
@@ -24,18 +24,18 @@
 #   - ../variables/empty.json
 #   tags: [start, home]
 
-# - name: HOST-SPECIFFIC-VARS-2 print testing_tags_group var
+# - name: HOST-specific-VARS-2 print testing_tags_group var
 #   debug:
 #       msg: "{{testing_tags_group}}"
 #   when: testing_tags_group is defined
-# - name: HOST-SPECIFFIC-VARS-3 print NO testing_tags_group var
+# - name: HOST-specific-VARS-3 print NO testing_tags_group var
 #   debug:
 #       msg: "There are no variables for the group {{group_names[0]}}"
 #   when: testing_tags_group is defined
-# - name: HOST-SPECIFFIC-VARS-4 merging group related variables `testing_tags_group` into global `testing_tags`
+# - name: HOST-specific-VARS-4 merging group related variables `testing_tags_group` into global `testing_tags`
 #   set_fact: testing_tags="{{ testing_tags|combine(testing_tags_group) }}"
 #   when: testing_tags_group is defined
-# - name: HOST-SPECIFFIC-VARS-5 print testing_tags_all var
+# - name: HOST-specific-VARS-5 print testing_tags_all var
 #   debug:
 #       msg: "{{testing_tags}}"
 #   when: testing_tags is defined

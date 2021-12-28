@@ -1,8 +1,13 @@
-log_format {{ item.key }}_ssl_combined_plus '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $server_port $uri';  
+log_format {{ item.key }}_ssl_combined_plus '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $server_port $uri';
 
 server {
-  listen 443 ssl;
-  listen [::]:443 ssl;
+  {%if certificate_reference is defined or certificate is defined %}
+  listen {{ item.port_ssl }} ssl;
+  listen [::]:{{ item.port_ssl }} ssl;
+  {% else %}
+  listen {{ item.port }};
+  listen [::]:{{ item.port }};
+  {% endif %}
 
   server_name {{ item.host }} {{ item.aliases }};
 
@@ -15,23 +20,27 @@ server {
   # ssl_certificate_key /etc/letsencrypt/blog.colabo.space/blog.colabo.space.key;
   # include /etc/nginx/snippets/ssl-params.conf;
 
+  {%if certificate_reference is defined or certificate is defined %}
   ssl_certificate /etc/letsencrypt/live/{{ item.certificate_reference | default(item.key) }}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/{{ item.certificate_reference | default(item.key) }}/privkey.pem;
   ssl_trusted_certificate /etc/letsencrypt/live/{{ item.certificate_reference | default(item.key) }}/chain.pem;
+  {% endif %}
 
   root /var/www/{{ item.key }};
   index index.html;
   autoindex on;
-  
+
   #__server_placeholder__
 }
 
 
+{%if certificate_reference is defined or certificate is defined %}
 server {
-  listen 80; 
-  listen [::]:80; 
+  listen {{ item.port }};
+  listen [::]:{{ item.port }};
   server_name {{ item.host }} {{ item.aliases }};
   return 301 https://{{ item.host }}$request_uri;
 }
+{% endif %}
 
   #__host_placeholder_bottom__

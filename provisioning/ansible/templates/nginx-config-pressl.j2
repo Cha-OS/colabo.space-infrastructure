@@ -1,8 +1,8 @@
-log_format {{ item.key }}_pressl_combined_plus '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $server_port $uri';  
+log_format {{ item.key }}_pressl_combined_plus '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" $server_port $uri';
 
-server { 
-  listen 80; 
-  listen [::]:80; 
+server {
+  listen {{ item.port }};
+  listen [::]:{{ item.port }};
 
   server_name {{ item.host }} {{ item.aliases }};
 

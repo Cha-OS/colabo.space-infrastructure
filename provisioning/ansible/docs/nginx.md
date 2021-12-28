@@ -6,6 +6,9 @@ This playbook installs nginx and configures all hosts
 
 Each key in the `items_array` represents the folder inside the `/var/www` that will be used
 
+You can set up HTTP port with the `port` property in the config file.
+You can set up the HTTPS port with the `port_ssl` property in the config file as well but it is not working due to certbot limitations.
+
 # Run
 
 ```sh

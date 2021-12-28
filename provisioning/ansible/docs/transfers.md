@@ -45,9 +45,11 @@ ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=orchestrator' --pr
                 "litterra"
             ]
         }
-    ```
+```
 
 # Issues
+
+## missing destination folders
 
 Transfer playbook uses [`synchronize` module](https://docs.ansible.com/ansible/latest/modules/synchronize_module.html) which is wrapper for the `rsync` system command.
 
@@ -55,3 +57,22 @@ It has problems with recreating missing destination folders:
 + [Ansible synchronise fails if parent directories are not already created](https://stackoverflow.com/questions/41961331/ansible-synchronise-fails-if-parent-directories-are-not-already-created)
 
 Therefore, we did a whole new work to isolate folder in the case of file transfer to create it before using `synchronize`
+
+## Error syncing
+
+For a mix of errors we were getting errors where underlying `rsync` command was breaking connection on a file transfer. When we removed the item before the one on which it was breaking it worked, which indicates that **the error is not directed enough**.
+
+Solution was mixed (not clear):
++ changing `"file_mode": "ug=rwX,o=rX,g+s",` into `"file_mode": "ug=rwX,o=rX",` for files
++ removing content of all destination folders
++ setting destination folders' users, groups and privileges to the expected one
+
+We replicated error with:
+
+```sh
+# https://linuxize.com/post/how-to-transfer-files-with-rsync-over-ssh/
+# https://www2.nrel.colostate.edu/projects/irc/public/Documents/KnowledgeBase/HowTo_SSH_DSA_Key.htm
+rsync -a -P -e "ssh -i ~/.ssh/orchestration-iaas-no.pem" ../../../tickerai-infrastructure-private/provisioning/files/backend/global-server.js ansible@tickerai.io:/var/services/tickerai-apps-backend/config/global.js
+```
+
+and we got error for file privileges (but it could be due to not having right user/group set as for the ansible scenario)

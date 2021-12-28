@@ -15,7 +15,7 @@
   - import_tasks: "include/_debug_active_hosts.yml"
     tags: [debug]
 
-  - import_tasks: "include/_load_host_speciffic_data.yml"
+  - import_tasks: "include/_load_host_specific_data.yml"
     tags: [always]
 
 
@@ -71,7 +71,7 @@
     with_items: "{{ items_array }}"
     when: "{{ (item.service is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) }}" # check hosts matching
     # https://docs.ansible.com/ansible/latest/modules/service_module.html
-    service: 
-      name: "{{ item.service.name }}" 
+    service:
+      name: "{{ item.service.name }}"
       state: started
       enabled: true
