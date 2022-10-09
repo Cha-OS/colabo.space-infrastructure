@@ -233,7 +233,8 @@
                     "tesla.colabo.space"
                 ]
             },
-            "extensions": [{
+            "extensions": [
+				{
                     "key": "well-known",
                     "type": "well-known",
                     "placeholder": "server_placeholder"
@@ -928,7 +929,8 @@
                     "discuss-wiki.colabo.space"
                 ]
             },
-            "extensions": [{
+            "extensions": [
+				{
                 "key": "well-known",
                 "type": "well-known",
                 "placeholder": "server_placeholder"

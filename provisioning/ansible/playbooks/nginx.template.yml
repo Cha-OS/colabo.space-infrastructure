@@ -1,0 +1,390 @@
+# joe playbooks/nginx.yml
+# ansible-playbook -i variables/hosts.yaml -e 'ansible_ssh_user=ansible' --private-key ~/.ssh/orchestration-iaas-no.pem playbooks/nginx.yml
+
+# https://code-maven.com/install-and-configure-nginx-using-ansible
+
+# NOT idempotent: because of tasks:
+# - `name: Set web folders`: it is not working well with ghost symlinks recursion
+# - `name: Create certificate with `certbot-auto``: it works, but complains that certificates are already created and too early to renew
+---
+- hosts: "{{active_hosts_groups}}"
+
+# TEMPLATE_REMOVED
+#   vars:
+#     rendered_template:
+#       a_placeholder:
+#   vars_files:
+#     - ../variables/nginx-list.json
+
+  remote_user: orchestrator
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  tasks:
+
+  - import_tasks: "include/_debug_active_hosts.yml"
+    tags: [debug]
+
+  - import_tasks: "include/_load_host_specific_data.yml"
+    tags: [always]
+
+  - name: START - check if nginx config is OK
+    # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    command: nginx -t -c /etc/nginx/nginx.conf
+    ignore_errors: yes
+
+# TEMPLATE_REMOVED
+#   - name: Set defaults
+#     with_items: "<< items_array >>"
+#     # https://stackoverflow.com/questions/35105615/ansible-use-default-if-a-variable-is-not-defined
+#     set_fact:
+#       item: "<< item | combine({
+#           'port': item.port | default('80'),
+#           'port_ssl': item.port_ssl | default('443')
+#         }, recursive=True)
+#       >>"
+
+  - name: Report (NGINX hosts config) extensions
+    with_items: "<< items_array >>"
+    debug:
+      msg: "<< item >>"
+
+  # -----------------------------------
+  # Install NGINX
+  # -----------------------------------
+  - name: INSTALL - Run the equivalent of `apt-get update`
+    # Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+    tags: [install]
+
+  - name: Make sure cron file for renewing certificates exists
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      content: ""
+      dest: /etc/cron.d/letsencrypt
+      force: no
+      mode: 0644
+    tags: [install]
+
+  - name: Make sure cron job for renewing certificates exists
+    lineinfile:
+      path: /etc/cron.d/letsencrypt
+      regexp: 'certbot-auto renew'
+      line: "8 06 * * * root /etc/nginx/letsencrypt/certbot-auto renew --no-self-upgrade --post-hook '/bin/systemctl reload nginx.service' # Run the letsencrypt renewal service using certbot-auto, once per day at 6:08am"
+    tags: [install]
+
+  # https://community.letsencrypt.org/t/certbot-auto-deployment-best-practices/91979
+  - name: Make sure `/etc/nginx/` has secure permissions
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/etc/nginx/'
+      state: 'directory'
+      owner: 'root'
+      group: 'root'
+      mode: '0755'
+      recurse: no
+
+  - name: Make sure `/etc/nginx/letsencrypt/` has secure permissions
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/etc/nginx/letsencrypt/'
+      state: 'directory'
+      owner: 'root'
+      group: 'root'
+      mode: '0755'
+      recurse: yes
+
+  - name: Make sure `/etc/nginx/letsencrypt/certbot-auto` has secure permissions
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/etc/nginx/letsencrypt/certbot-auto'
+      state: 'touch'
+      owner: 'root'
+      group: 'root'
+      mode: '0755'
+      recurse: no
+
+  - name: Ensure nginx is at the latest version
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    apt:
+      name: "nginx"
+      state: latest
+    tags: [install]
+
+  - name: start nginx
+    # https://docs.ansible.com/ansible/latest/modules/service_module.html
+    service:
+        name: nginx
+        state: started
+    tags: [install]
+
+  # -----------------------------------
+  # Create hosts' files and folders
+  # -----------------------------------
+  - name: Set web folders
+    when: "<< item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/<<item.key>>'
+      state: 'directory'
+      owner: '<<item.web_root.owner>>'
+      group: '<<item.web_root.group>>'
+      mode: '<<item.web_root.mode>>'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: create `index.html` files
+    when: "<< item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module
+    template:
+      src: ../templates/nginx-site.j2
+      dest: "/var/www/<<item.key>>/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: Load NGINX host templates
+    when: "<< item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    set_fact:
+      rendered_template: "<< rendered_template
+      | combine({
+        item.key: {
+          'main_template_pressl_final': lookup('template', '../templates/nginx-config-pressl.j2'),
+          'main_template_ssl': lookup('template', '../templates/nginx-config-ssl.j2'),
+          'extension_templates': 'TO_BE_SET',
+          'main_template_ssl_final': 'TO_BE_SET'
+        }
+      }, recursive=True)
+      >>"
+    tags: [create_host, create_ssl, create_nginx_config]
+
+  # ------------------------------------------------------------------
+  # PRESSL NGINX
+  # ------------------------------------------------------------------
+  - name: Report rendered pressl final templates for hosts configs
+    when: "<< item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # Prints all final rendered_template[*]['main_template_ssl_final']
+    debug:
+      msg: "template for << item.key >> is:\r\n<< rendered_template[item.key]['main_template_pressl_final'] >>"
+    tags: [create_host, create_ssl]
+
+  - name: create pressl `sites-available` config files
+    when: "<< item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) >>" # check hosts matching
+    # Exports rendered_template[*]['main_template_pressl_final'] into `/etc/nginx/sites-available/*`
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy: content="<< rendered_template[item.key]['main_template_pressl_final'] >>" dest="/etc/nginx/sites-available/<< item.key >>-pressl"
+    tags: [create_host, create_ssl]
+
+  - name: remove ssl config from `/etc/nginx/sites-enabled`
+    when: "<< item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled/<< item.key >>"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: link pressl config into `/etc/nginx/sites-enabled`
+    when: "<< item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available/<< item.key >>-pressl"
+      dest: "/etc/nginx/sites-enabled/<< item.key >>-pressl"
+      state: link
+    tags: [create_host, create_ssl]
+
+  # ------------------------------------------------------------------
+  # CERTIFICATES
+  # ------------------------------------------------------------------
+  - name: Set certificate folders
+    when: "<< (item.certificate is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    with_items: "<< items_array >>"
+    file:
+      path: '/var/www/<<item.key>>/letsencrypt'
+      state: 'directory'
+      owner: '<<item.web_root.owner>>'
+      group: '<<item.web_root.group>>'
+      mode: '<<item.web_root.mode>>'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  # -----------------------------------
+  # Restart NGINX
+  # -----------------------------------
+  - name: PRESSL - check if nginx config is OK
+    # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    command: nginx -t -c /etc/nginx/nginx.conf
+    tags: [create_host, create_ssl]
+
+  - name: restart nginx before issuing certificates
+    service:
+      name: nginx
+      state: restarted
+    tags: [create_host, create_ssl]
+
+  - name: Debugging `certbot-auto` command
+    when: "<< (item.certificate is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    debug:
+      msg: './certbot-auto certonly -n --expand --agree-tos -m << item.certificate.email >> --webroot -w /var/www/<< item.key >>/letsencrypt --cert-name << item.key >> -d << item.certificate.hosts | join(" -d ") >>'
+    tags: [create_host, create_ssl]
+
+  - name: Create certificate with `certbot-auto`
+    when: "<< (item.certificate is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    # sudo ./certbot-auto certonly -n --agree-tos -m << item.certificate.email >> --webroot -w /var/www/<< item.key >>/letsencrypt -d << item.host >>
+    # sudo ./certbot-auto certonly -n --agree-tos -m chaos.ngo@gmail.com --webroot -w /var/www/ghost-chaos/letsencrypt -d chaos.colabo.space"
+    # `--no-bootstrap` will avoid crashing due to installment of new packages
+    # `--cert-name` sets the name under the `/etc/letsencrypt/live/` where the certificates will be stored
+    # + https://community.letsencrypt.org/t/trying-to-specify-the-cert-storage-location-and-failing/40698
+    # + https://github.com/certbot/certbot/issues/2128
+    command: ./certbot-auto certonly -n --expand --agree-tos -m << item.certificate.email >> --webroot -w /var/www/<< item.key >>/letsencrypt --cert-name << item.key >> -d << item.certificate.hosts | join(" -d ") >>
+    # command: ./certbot-auto certonly --agree-tos -m << item.certificate.email >> --no-bootstrap --webroot -w /var/www/<< item.key >>/letsencrypt -d << item.certificate.hosts | join(" -d ") >>
+    args:
+      chdir: "/etc/nginx/letsencrypt"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+  - name: Set initial ssl templates 'main_template_ssl_final' to 'main_template_ssl'
+    when: "<< (item.certificate is defined or item.certificate_reference is defined) and (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    # it is basically:
+    # rendered_template[item.key]['main_template_ssl_final']
+    #   = rendered_template[item.key]['main_template_ssl']
+    with_items: "<< items_array >>"
+    set_fact:
+      rendered_template: "<< rendered_template
+      | combine({
+        item.key: {
+          'main_template_ssl_final': rendered_template[item.key]['main_template_ssl']
+        }
+      }, recursive=True)
+      >>"
+    tags: [create_host, create_nginx_config]
+
+  # -----------------------------------
+  # Extending NGINX hosts config files with hosts' extensions
+  # -----------------------------------
+
+  - name: Report (NGINX hosts config) extensions
+    when: "<< (item.0.certificate is defined or item.certificate_reference is defined) and (item.0.hosts is not defined or ((active_hosts_groups | intersect(item.0.hosts)) | length>0)) >>" # check hosts matching
+    debug:
+      msg: "<< item.1.key >> in << item.0.key >>"
+    with_subelements:
+      - "<< items_array >>"
+      - extensions
+    tags: [create_host, create_nginx_config]
+
+  - name: Loads and renders (NGINX hosts config) extensions' templates
+    when: "<< (item.0.hosts is not defined or ((active_hosts_groups | intersect(item.0.hosts)) | length>0)) >>" # check hosts matching
+    # rendered_template[item.0.key]['extension_templates'][item.1.key] = <rendered_template>
+    set_fact:
+      rendered_template: "<< rendered_template
+      | combine({
+        item.0.key: {
+          'extension_templates': {
+            item.1.key: lookup('template', '../templates/nginx-config-extension-<< item.1.type >>.j2')
+          }
+        }
+      }, recursive=True)
+      >>"
+      # << item.1 >> is 2nd depth
+      # << item.0 >> is 1st depth
+    with_subelements:
+      - "<< items_array >>" # 1st depth (sites)
+      - extensions # 2nd depth (extensions of sites)
+    tags: [create_host, create_nginx_config]
+
+  - name: Report each rendered (NGINX hosts config) extension templates
+    when: "<< (item.0.hosts is not defined or ((active_hosts_groups | intersect(item.0.hosts)) | length>0)) >>" # check hosts matching
+    # prints all rendered_template[*]['extension_templates'][*]
+    debug:
+      msg: "template for << item.1.key >> in << item.0.key >> is:\r\n<< rendered_template[item.0.key]['extension_templates'][item.1.key] >>"
+    with_subelements:
+      - "<< items_array >>"
+      - extensions
+    tags: [create_host, create_nginx_config]
+
+  - name: Inject (NGINX hosts config) extensions templates
+    when: "<< (item.0.hosts is not defined or ((active_hosts_groups | intersect(item.0.hosts)) | length>0)) >>" # check hosts matching
+    # merges all templates from rendered_template[item.0.key]['extension_templates'][*] into rendered_template[item.0.key]['main_template_ssl_final']
+    set_fact:
+      rendered_template: "<< rendered_template
+      | combine({
+        item.0.key: {
+          'main_template_ssl_final': rendered_template[item.0.key]['main_template_ssl_final'] | regex_replace('#__'+item.1.placeholder+'__',
+          '# extension:' +item.1.key+ '(type:' +item.1.type+ ')\r\n' + rendered_template[item.0.key]['extension_templates'][item.1.key] +'\r\n#__'+item.1.placeholder+'__')
+        }
+      }, recursive=True)
+      >>"
+      # << item.1 >> is 2nd depth
+      # << item.0 >> is 1st depth
+    with_subelements:
+      - "<< items_array >>" # 1st depth (sites)
+      - extensions # 2nd depth (extensions of sites)
+    tags: [create_host, create_nginx_config]
+
+
+  - name: Report rendered SSL final templates for hosts configs
+    when: "<< (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    # Prints all final rendered_template[*]['main_template_ssl_final']
+    with_items: "<< items_array >>"
+    debug:
+      msg: "template for << item.key >> is:\r\n<< rendered_template[item.key]['main_template_ssl_final'] >>"
+    tags: [create_host, create_nginx_config]
+
+  - name: create SSL `sites-available` config files
+    when: "<< (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    # Exports rendered_template[*]['main_template_ssl_final'] into `/etc/nginx/sites-available/*`
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy: content="<< rendered_template[item.key]['main_template_ssl_final'] >>" dest="/etc/nginx/sites-available/<< item.key >>"
+    tags: [create_host, create_nginx_config]
+
+  - name: remove PRESSL config from `/etc/nginx/sites-enabled`
+    when: "<< (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled/<< item.key >>-pressl"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: link SSL config into `/etc/nginx/sites-enabled`
+    when: "<< (item.hosts is not defined or ((active_hosts_groups | intersect(item.hosts)) | length>0)) >>" # check hosts matching
+    with_items: "<< items_array >>"
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available/<< item.key >>"
+      dest: "/etc/nginx/sites-enabled/<< item.key >>"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  # -----------------------------------
+  # Restart NGINX
+  # -----------------------------------
+  - name: SSL - check if nginx config is OK
+    # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    command: nginx -t -c /etc/nginx/nginx.conf
+    tags: [create_host, create_ssl, create_nginx_config]
+
+  - name: SSL - restart nginx
+    service:
+      name: nginx
+      state: restarted
+    tags: [create_host, create_ssl, create_nginx_config]
