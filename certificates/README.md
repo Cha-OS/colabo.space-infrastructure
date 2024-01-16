@@ -1,4 +1,4 @@
-# Shortly sumarrized
+# Shortly summarized
 
 ## Certificates
 
