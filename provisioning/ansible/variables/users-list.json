@@ -2,11 +2,11 @@
     "items_array": [{
             "key": "orchestrator",
             "fullname": "Orchestrator",
-            "ssh_pub_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTIJQoJvPt69Mu7TAVSwUqTZqkafu4+3cVcZnJiyeclZiuK3LZNmPHsqM8DhpERSYkMvi3UAQ8FqnCj4+OnBNhyQnc6BXlogmiFHTJ6Az+GraXaSPABxnUYummnMsAWCnHavp7+mQ76dXcj3N/tpJMuAHykTVFp1RvMjoIJQKHj4+u34PJx0mVDYnCmXEJi4Z+GNYyv7CISua1HLTJWgoMMgboHWnj4RMREVNxoyiQNnvdANxl3yQLvKkcdMtlbduuETVxH/otDqHTqgXqrlswIj3dm4Xmdf+/iWTDL1StbFt3HC3GztIRAEtDOdb1HSls8M2B3iWh62Tio16+MzM9 Generated-by-Nova"
+            "ssh_pub_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZVkYAtAv1zlr9e5FOaJnSt7/9T9zm5uwR3eM+btn80c5CWNWIo3iSmc/GLQnbJ8mhkfbmFUfUTJsIhb4GLGttIV6adFRIDiFVCl9zySOZEqEd2IxwYj4S59Obhdr8p03Vs0O6G+gu/ZSqIPAvwoSrjyWsd8Viv6xhBmYBqsfbvFhkj6G6uVJapyZegwl52urKQXKCxtEL2b3zQsb3+ua+6PZcjNE0aejgSiSxaTR0Rae5iByDGQ13d9H1EdVTxOBguXvbJ02wMV71+p5BphCowLN6WihtRmN34mHKm0PKeDVItUwLksYhhgBlVMuIt8/cq4TAMMDiQSPHDrkpvUgl Generated-by-Nova"
         }, {
             "key": "ansible",
             "fullname": "Ansible",
-            "ssh_pub_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTIJQoJvPt69Mu7TAVSwUqTZqkafu4+3cVcZnJiyeclZiuK3LZNmPHsqM8DhpERSYkMvi3UAQ8FqnCj4+OnBNhyQnc6BXlogmiFHTJ6Az+GraXaSPABxnUYummnMsAWCnHavp7+mQ76dXcj3N/tpJMuAHykTVFp1RvMjoIJQKHj4+u34PJx0mVDYnCmXEJi4Z+GNYyv7CISua1HLTJWgoMMgboHWnj4RMREVNxoyiQNnvdANxl3yQLvKkcdMtlbduuETVxH/otDqHTqgXqrlswIj3dm4Xmdf+/iWTDL1StbFt3HC3GztIRAEtDOdb1HSls8M2B3iWh62Tio16+MzM9 Generated-by-Nova"
+            "ssh_pub_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZVkYAtAv1zlr9e5FOaJnSt7/9T9zm5uwR3eM+btn80c5CWNWIo3iSmc/GLQnbJ8mhkfbmFUfUTJsIhb4GLGttIV6adFRIDiFVCl9zySOZEqEd2IxwYj4S59Obhdr8p03Vs0O6G+gu/ZSqIPAvwoSrjyWsd8Viv6xhBmYBqsfbvFhkj6G6uVJapyZegwl52urKQXKCxtEL2b3zQsb3+ua+6PZcjNE0aejgSiSxaTR0Rae5iByDGQ13d9H1EdVTxOBguXvbJ02wMV71+p5BphCowLN6WihtRmN34mHKm0PKeDVItUwLksYhhgBlVMuIt8/cq4TAMMDiQSPHDrkpvUgl Generated-by-Nova"
         }, {
             "key": "mprinc",
             "fullname": "Sasha Rudan",

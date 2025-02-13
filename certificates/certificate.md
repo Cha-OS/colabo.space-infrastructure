@@ -1,9 +1,10 @@
 # Updating
 
+Use new way through the [Colabo tool](/colabo/src/tools/puzzles/devop/ansible/templates/nginx/nginx.md)
+
 ```sh
 cdz
 cd colabo.space-infrastructure/provisioning/ansible
-
 
 For: bukvik.litterra.net, cvrkut.litterra.net, druzba.litterra.net, legacy.litterra.net, perlaj.litterra.net, rc-apps.litterra.net, rc.litterra.net, read.litterra.net
 

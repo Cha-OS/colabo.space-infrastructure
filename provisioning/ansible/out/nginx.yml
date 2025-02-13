@@ -1,0 +1,1130 @@
+# NOT idempotent: because of tasks:
+# - `name: Set web folders`: it is not working well with ghost symlinks recursion
+# - `name: Create certificate with `acme.sh``: it works, but complains that certificates are already created and too early to renew
+---
+- hosts: blogs
+
+  remote_user: ansible
+  # https://stackoverflow.com/questions/27444204/run-ansible-playbook-with-sudo
+  become: yes
+  become_method: sudo
+  gather_facts: false
+
+  tasks:
+
+  - name: START - check if nginx config is OK
+    # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    command: nginx -t -c /etc/nginx/nginx.conf
+    ignore_errors: yes
+    tags: [always]
+
+  # -----------------------------------
+  # Install NGINX
+  # -----------------------------------
+  - name: INSTALL - Run the equivalent of `apt-get update`
+    # Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+    tags: [install]
+
+  # https://community.letsencrypt.org/t/certbot-auto-deployment-best-practices/91979
+  - name: Make sure `/etc/nginx/` has secure permissions
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/etc/nginx/'
+      state: 'directory'
+      owner: 'root'
+      group: 'root'
+      mode: '0755'
+      recurse: no
+    tags: [always]
+
+  - name: Make sure `/etc/nginx/sites-available/` exists
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/etc/nginx/sites-available/'
+      state: 'directory'
+      owner: 'root'
+      group: 'root'
+      mode: '0755'
+      recurse: no
+    tags: [always]
+
+  - name: Make sure `/etc/nginx/sites-enabled/` exists
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/etc/nginx/sites-enabled/'
+      state: 'directory'
+      owner: 'root'
+      group: 'root'
+      mode: '0755'
+      recurse: no
+    tags: [always]
+
+  - name: Make sure `/etc/cert/` has secure permissions
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/etc/cert/'
+      state: 'directory'
+      owner: 'root'
+      group: 'root'
+      mode: '0755'
+      recurse: yes
+    tags: [always]
+
+  - name: Ensure nginx is at the latest version
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    apt:
+      name: "nginx"
+      state: latest
+    tags: [install]
+
+  - name: start nginx
+    # https://docs.ansible.com/ansible/latest/modules/service_module.html
+    service:
+        name: nginx
+        state: started
+    tags: [install]
+
+
+  # -----------------------------------
+  # Generating required templates
+  # -----------------------------------
+
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-chaos"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-chaos"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-chaos"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-chaos"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-chaos"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-chaos"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-chaos"
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-colabo"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-colabo"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-colabo"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-colabo"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-colabo"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-colabo"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-colabo"
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-climathon"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-climathon"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-climathon"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-climathon"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-climathon"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-climathon"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-climathon"
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-boradugic"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-boradugic"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-boradugic"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-boradugic"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-boradugic"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-boradugic"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-boradugic"
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-savamrkalj"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-savamrkalj"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-savamrkalj"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-savamrkalj"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-savamrkalj"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-savamrkalj"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-savamrkalj"
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-retesla"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-retesla"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-retesla"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-retesla"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-retesla"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-retesla"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-retesla"
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-mprinc"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-mprinc"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-mprinc"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-mprinc"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-mprinc"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-mprinc"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-mprinc"
+# [generateTemplateFiles]
+# loading the inner template "nginx-site" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-site.template.html)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-site") for key "ghost-litterra"
+# loading the inner template "nginx-config-pressl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-pressl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-pressl") for key "ghost-litterra"
+# loading the inner template "nginx-config-ssl" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-ssl.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object])
+# [generateTemplateFiles] generated inner template ("nginx-config-ssl") for key "ghost-litterra"
+# loading the inner template "extensions" (innerTemplateNonRenderedPath: playbooks/nginx/templates-inner/nginx-config-extension__{{ extensionType }}.template.conf)
+# retrieving sub-templates (innerSubTemplates: [object Object],[object Object],[object Object],[object Object])
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-litterra"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-litterra"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-litterra"
+# [generateTemplateFiles] generated inner template ("extensions") for key "ghost-litterra"
+
+  # -----------------------------------
+  # Extending NGINX hosts config files (templates) with hosts' extensions (sub-templates, injecting them in templates)
+  # -----------------------------------
+
+# [injectSubTemplatesInTemplates]
+# [ghost-chaos] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-chaos.conf)
+# [ghost-chaos][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-chaos__well-known.conf)
+# [ghost-chaos][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-chaos__ghost-en.conf)
+# [ghost-chaos][ghost-sr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-chaos__ghost-sr.conf)
+# [ghost-chaos][ghost-redirect] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-chaos__ghost-redirect.conf)
+# [ghost-chaos] identified placeholders "server_placeholder"
+# [ghost-chaos] injecting sub-templates ...
+# [ghost-chaos] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-chaos.conf)
+# [ghost-chaos] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-chaos.conf)
+# [injectSubTemplatesInTemplates]
+# [ghost-colabo] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-colabo.conf)
+# [ghost-colabo][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-colabo__well-known.conf)
+# [ghost-colabo][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-colabo__ghost-en.conf)
+# [ghost-colabo][ghost-sr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-colabo__ghost-sr.conf)
+# [ghost-colabo][ghost-redirect] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-colabo__ghost-redirect.conf)
+# [ghost-colabo] identified placeholders "server_placeholder"
+# [ghost-colabo] injecting sub-templates ...
+# [ghost-colabo] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-colabo.conf)
+# [ghost-colabo] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-colabo.conf)
+# [injectSubTemplatesInTemplates]
+# [ghost-climathon] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-climathon.conf)
+# [ghost-climathon][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-climathon__well-known.conf)
+# [ghost-climathon][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-climathon__ghost-en.conf)
+# [ghost-climathon][ghost-sr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-climathon__ghost-sr.conf)
+# [ghost-climathon][ghost-redirect] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-climathon__ghost-redirect.conf)
+# [ghost-climathon] identified placeholders "server_placeholder"
+# [ghost-climathon] injecting sub-templates ...
+# [ghost-climathon] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-climathon.conf)
+# [ghost-climathon] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-climathon.conf)
+# [injectSubTemplatesInTemplates]
+# [ghost-boradugic] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-boradugic.conf)
+# [ghost-boradugic][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-boradugic__well-known.conf)
+# [ghost-boradugic][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-boradugic__ghost-en.conf)
+# [ghost-boradugic][ghost-sr-cyr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-boradugic__ghost-sr-cyr.conf)
+# [ghost-boradugic][ghost-sr-lat] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-boradugic__ghost-sr-lat.conf)
+# [ghost-boradugic] identified placeholders "server_placeholder"
+# [ghost-boradugic] injecting sub-templates ...
+# [ghost-boradugic] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-boradugic.conf)
+# [ghost-boradugic] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-boradugic.conf)
+# [injectSubTemplatesInTemplates]
+# [ghost-savamrkalj] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-savamrkalj.conf)
+# [ghost-savamrkalj][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-savamrkalj__well-known.conf)
+# [ghost-savamrkalj][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-savamrkalj__ghost-en.conf)
+# [ghost-savamrkalj][ghost-sr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-savamrkalj__ghost-sr.conf)
+# [ghost-savamrkalj][ghost-redirect] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-savamrkalj__ghost-redirect.conf)
+# [ghost-savamrkalj] identified placeholders "server_placeholder"
+# [ghost-savamrkalj] injecting sub-templates ...
+# [ghost-savamrkalj] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-savamrkalj.conf)
+# [ghost-savamrkalj] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-savamrkalj.conf)
+# [injectSubTemplatesInTemplates]
+# [ghost-retesla] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-retesla.conf)
+# [ghost-retesla][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-retesla__well-known.conf)
+# [ghost-retesla][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-retesla__ghost-en.conf)
+# [ghost-retesla][ghost-sr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-retesla__ghost-sr.conf)
+# [ghost-retesla][ghost-redirect] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-retesla__ghost-redirect.conf)
+# [ghost-retesla] identified placeholders "server_placeholder"
+# [ghost-retesla] injecting sub-templates ...
+# [ghost-retesla] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-retesla.conf)
+# [ghost-retesla] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-retesla.conf)
+# [injectSubTemplatesInTemplates]
+# [ghost-mprinc] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-mprinc.conf)
+# [ghost-mprinc][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-mprinc__well-known.conf)
+# [ghost-mprinc][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-mprinc__ghost-en.conf)
+# [ghost-mprinc][ghost-sr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-mprinc__ghost-sr.conf)
+# [ghost-mprinc][ghost-redirect] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-mprinc__ghost-redirect.conf)
+# [ghost-mprinc] identified placeholders "server_placeholder"
+# [ghost-mprinc] injecting sub-templates ...
+# [ghost-mprinc] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-mprinc.conf)
+# [ghost-mprinc] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-mprinc.conf)
+# [injectSubTemplatesInTemplates]
+# [ghost-litterra] loading the template "nginx-config-ssl" (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-litterra.conf)
+# [ghost-litterra][well-known] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-litterra__well-known.conf)
+# [ghost-litterra][ghost-en] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-litterra__ghost-en.conf)
+# [ghost-litterra][ghost-sr] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-litterra__ghost-sr.conf)
+# [ghost-litterra][ghost-redirect] loading the sub-template "nginx-config-ssl" (builtSubTemplatePath: out/tmp/nginx-config-extension__ghost-litterra__ghost-redirect.conf)
+# [ghost-litterra] identified placeholders "server_placeholder"
+# [ghost-litterra] injecting sub-templates ...
+# [ghost-litterra] re-saving template with injected sub-templates ... (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-litterra.conf)
+# [ghost-litterra] saved template with injected sub-templates (builtTemplatePath: out/tmp/nginx-config-ssl__ghost-litterra.conf)
+
+  # -----------------------------------
+  # Create hosts' files and folders
+  # -----------------------------------
+
+  - name: (key `ghost-chaos`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-chaos'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-chaos`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-chaos.html"
+      dest: "/var/www/ghost-chaos/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: (key `ghost-colabo`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-colabo'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-colabo`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-colabo.html"
+      dest: "/var/www/ghost-colabo/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: (key `ghost-climathon`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-climathon'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-climathon`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-climathon.html"
+      dest: "/var/www/ghost-climathon/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: (key `ghost-boradugic`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-boradugic'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-boradugic`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-boradugic.html"
+      dest: "/var/www/ghost-boradugic/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: (key `ghost-savamrkalj`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-savamrkalj'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-savamrkalj`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-savamrkalj.html"
+      dest: "/var/www/ghost-savamrkalj/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: (key `ghost-retesla`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-retesla'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-retesla`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-retesla.html"
+      dest: "/var/www/ghost-retesla/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: (key `ghost-mprinc`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-mprinc'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-mprinc`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-mprinc.html"
+      dest: "/var/www/ghost-mprinc/index.html"
+      force: no
+    tags: [create_host]
+
+  - name: (key `ghost-litterra`) Set web folders
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: '/var/www/ghost-litterra'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    # there is a problem with sym links and non-empty folders
+    ignore_errors: yes
+    tags: [create_host]
+
+  - name: (key `ghost-litterra`) create `index.html` files
+    # https://docs.ansible.com/ansible/2.6/modules/copy_module.html
+    copy:
+      src: "tmp/nginx-site__ghost-litterra.html"
+      dest: "/var/www/ghost-litterra/index.html"
+      force: no
+    tags: [create_host]
+
+
+  # ------------------------------------------------------------------
+  # PRESSL NGINX
+  # ------------------------------------------------------------------
+
+  - name: (key `ghost-chaos`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-chaos.conf"
+      dest="/etc/nginx/sites-available//ghost-chaos-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-chaos`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-chaos.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-chaos`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-chaos-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-chaos`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-chaos-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-chaos-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-colabo`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-colabo.conf"
+      dest="/etc/nginx/sites-available//ghost-colabo-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-colabo`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-colabo.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-colabo`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-colabo-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-colabo`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-colabo-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-colabo-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-climathon`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-climathon.conf"
+      dest="/etc/nginx/sites-available//ghost-climathon-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-climathon`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-climathon.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-climathon`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-climathon-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-climathon`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-climathon-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-climathon-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-boradugic`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-boradugic.conf"
+      dest="/etc/nginx/sites-available//ghost-boradugic-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-boradugic`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-boradugic.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-boradugic`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-boradugic-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-boradugic`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-boradugic-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-boradugic-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-savamrkalj`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-savamrkalj.conf"
+      dest="/etc/nginx/sites-available//ghost-savamrkalj-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-savamrkalj`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-savamrkalj.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-savamrkalj`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-savamrkalj-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-savamrkalj`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-savamrkalj-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-savamrkalj-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-retesla`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-retesla.conf"
+      dest="/etc/nginx/sites-available//ghost-retesla-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-retesla`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-retesla.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-retesla`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-retesla-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-retesla`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-retesla-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-retesla-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-mprinc`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-mprinc.conf"
+      dest="/etc/nginx/sites-available//ghost-mprinc-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-mprinc`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-mprinc.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-mprinc`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-mprinc-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-mprinc`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-mprinc-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-mprinc-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-litterra`) create pressl `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-pressl__ghost-litterra.conf"
+      dest="/etc/nginx/sites-available//ghost-litterra-pressl.conf"
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-litterra`) remove ssl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-litterra.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-litterra`) remove pressl config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-litterra-pressl.conf"
+      state: absent
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-litterra`) link pressl config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-litterra-pressl.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-litterra-pressl.conf"
+      state: link
+    tags: [create_host, create_ssl]
+
+
+  # ------------------------------------------------------------------
+  # CERTIFICATES
+  # ------------------------------------------------------------------
+
+# TODO: Is this folder (`/var/www//cert`) necessary?
+  - name: (key `ghost-chaos`) Set certificate folders
+    file:
+      path: '/var/www/ghost-chaos/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-colabo`) Set certificate folders
+    file:
+      path: '/var/www/ghost-colabo/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-climathon`) Set certificate folders
+    file:
+      path: '/var/www/ghost-climathon/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-boradugic`) Set certificate folders
+    file:
+      path: '/var/www/ghost-boradugic/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-savamrkalj`) Set certificate folders
+    file:
+      path: '/var/www/ghost-savamrkalj/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-retesla`) Set certificate folders
+    file:
+      path: '/var/www/ghost-retesla/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-mprinc`) Set certificate folders
+    file:
+      path: '/var/www/ghost-mprinc/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-litterra`) Set certificate folders
+    file:
+      path: '/var/www/ghost-litterra/cert'
+      state: 'directory'
+      owner: 'www-data'
+      group: 'developers'
+      mode: 'u=rwx,g=rwxs,o=rx'
+      recurse: yes
+    tags: [create_host, create_ssl]
+
+
+  # -----------------------------------
+  # Restart NGINX
+  # -----------------------------------
+  - name: PRESSL - check if nginx config is OK
+    # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    command: nginx -t -c /etc/nginx/nginx.conf
+    tags: [create_host, create_ssl]
+
+  - name: restart nginx before issuing certificates
+    service:
+      name: nginx
+      state: restarted
+    tags: [create_host, create_ssl]
+
+  # -----------------------------------
+  # ISSUING CERTIFICATES
+  # -----------------------------------
+  - name: (key `ghost-chaos`) Debugging `acme.sh` command
+    debug:
+      msg: '/root/.acme.sh/acme.sh --force --issue  -d cha-os.org -d www.cha-os.org -w /var/www/ghost-chaos  --cert-file /etc/cert/ghost-chaos/certificate.cer --key-file /etc/cert/ghost-chaos/priv_key.pem --ca-file /etc/cert/ghost-chaos/trusted_chain.cer --fullchain-file /etc/cert/ghost-chaos/full_chain.cer'
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-chaos`) Create certificate with `acme.sh`
+    #we need shell as `acme.sh` is a shell script
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    shell: /root/.acme.sh/acme.sh --force --issue  -d cha-os.org -d www.cha-os.org -w /var/www/ghost-chaos  --cert-file /etc/cert/ghost-chaos/certificate.cer --key-file /etc/cert/ghost-chaos/priv_key.pem --ca-file /etc/cert/ghost-chaos/trusted_chain.cer --fullchain-file /etc/cert/ghost-chaos/full_chain.cer
+    args:
+      chdir: "/etc/nginx"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-colabo`) Debugging `acme.sh` command
+    debug:
+      msg: '/root/.acme.sh/acme.sh --force --issue  -d colabo.space -d www.colabo.space -d climathon.colabo.space -w /var/www/ghost-colabo  --cert-file /etc/cert/ghost-colabo/certificate.cer --key-file /etc/cert/ghost-colabo/priv_key.pem --ca-file /etc/cert/ghost-colabo/trusted_chain.cer --fullchain-file /etc/cert/ghost-colabo/full_chain.cer'
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-colabo`) Create certificate with `acme.sh`
+    #we need shell as `acme.sh` is a shell script
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    shell: /root/.acme.sh/acme.sh --force --issue  -d colabo.space -d www.colabo.space -d climathon.colabo.space -w /var/www/ghost-colabo  --cert-file /etc/cert/ghost-colabo/certificate.cer --key-file /etc/cert/ghost-colabo/priv_key.pem --ca-file /etc/cert/ghost-colabo/trusted_chain.cer --fullchain-file /etc/cert/ghost-colabo/full_chain.cer
+    args:
+      chdir: "/etc/nginx"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-boradugic`) Debugging `acme.sh` command
+    debug:
+      msg: '/root/.acme.sh/acme.sh --force --issue  -d boradugic.com -d www.boradugic.com -d boradugic.colabo.space -w /var/www/ghost-boradugic  --cert-file /etc/cert/ghost-boradugic/certificate.cer --key-file /etc/cert/ghost-boradugic/priv_key.pem --ca-file /etc/cert/ghost-boradugic/trusted_chain.cer --fullchain-file /etc/cert/ghost-boradugic/full_chain.cer'
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-boradugic`) Create certificate with `acme.sh`
+    #we need shell as `acme.sh` is a shell script
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    shell: /root/.acme.sh/acme.sh --force --issue  -d boradugic.com -d www.boradugic.com -d boradugic.colabo.space -w /var/www/ghost-boradugic  --cert-file /etc/cert/ghost-boradugic/certificate.cer --key-file /etc/cert/ghost-boradugic/priv_key.pem --ca-file /etc/cert/ghost-boradugic/trusted_chain.cer --fullchain-file /etc/cert/ghost-boradugic/full_chain.cer
+    args:
+      chdir: "/etc/nginx"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-savamrkalj`) Debugging `acme.sh` command
+    debug:
+      msg: '/root/.acme.sh/acme.sh --force --issue  -d savamrkalj.com -d www.savamrkalj.com -d savamrkalj.colabo.space -w /var/www/ghost-savamrkalj  --cert-file /etc/cert/ghost-savamrkalj/certificate.cer --key-file /etc/cert/ghost-savamrkalj/priv_key.pem --ca-file /etc/cert/ghost-savamrkalj/trusted_chain.cer --fullchain-file /etc/cert/ghost-savamrkalj/full_chain.cer'
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-savamrkalj`) Create certificate with `acme.sh`
+    #we need shell as `acme.sh` is a shell script
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    shell: /root/.acme.sh/acme.sh --force --issue  -d savamrkalj.com -d www.savamrkalj.com -d savamrkalj.colabo.space -w /var/www/ghost-savamrkalj  --cert-file /etc/cert/ghost-savamrkalj/certificate.cer --key-file /etc/cert/ghost-savamrkalj/priv_key.pem --ca-file /etc/cert/ghost-savamrkalj/trusted_chain.cer --fullchain-file /etc/cert/ghost-savamrkalj/full_chain.cer
+    args:
+      chdir: "/etc/nginx"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-retesla`) Debugging `acme.sh` command
+    debug:
+      msg: '/root/.acme.sh/acme.sh --force --issue  -d remakingtesla.com -d www.remakingtesla.com -d tesla.colabo.space -w /var/www/ghost-retesla  --cert-file /etc/cert/ghost-retesla/certificate.cer --key-file /etc/cert/ghost-retesla/priv_key.pem --ca-file /etc/cert/ghost-retesla/trusted_chain.cer --fullchain-file /etc/cert/ghost-retesla/full_chain.cer'
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-retesla`) Create certificate with `acme.sh`
+    #we need shell as `acme.sh` is a shell script
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    shell: /root/.acme.sh/acme.sh --force --issue  -d remakingtesla.com -d www.remakingtesla.com -d tesla.colabo.space -w /var/www/ghost-retesla  --cert-file /etc/cert/ghost-retesla/certificate.cer --key-file /etc/cert/ghost-retesla/priv_key.pem --ca-file /etc/cert/ghost-retesla/trusted_chain.cer --fullchain-file /etc/cert/ghost-retesla/full_chain.cer
+    args:
+      chdir: "/etc/nginx"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-mprinc`) Debugging `acme.sh` command
+    debug:
+      msg: '/root/.acme.sh/acme.sh --force --issue  -d sasarudan.com -d www.sasarudan.com -w /var/www/ghost-mprinc  --cert-file /etc/cert/ghost-mprinc/certificate.cer --key-file /etc/cert/ghost-mprinc/priv_key.pem --ca-file /etc/cert/ghost-mprinc/trusted_chain.cer --fullchain-file /etc/cert/ghost-mprinc/full_chain.cer'
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-mprinc`) Create certificate with `acme.sh`
+    #we need shell as `acme.sh` is a shell script
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    shell: /root/.acme.sh/acme.sh --force --issue  -d sasarudan.com -d www.sasarudan.com -w /var/www/ghost-mprinc  --cert-file /etc/cert/ghost-mprinc/certificate.cer --key-file /etc/cert/ghost-mprinc/priv_key.pem --ca-file /etc/cert/ghost-mprinc/trusted_chain.cer --fullchain-file /etc/cert/ghost-mprinc/full_chain.cer
+    args:
+      chdir: "/etc/nginx"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-litterra`) Debugging `acme.sh` command
+    debug:
+      msg: '/root/.acme.sh/acme.sh --force --issue  -d litterra.net -d www.litterra.net -w /var/www/ghost-litterra  --cert-file /etc/cert/ghost-litterra/certificate.cer --key-file /etc/cert/ghost-litterra/priv_key.pem --ca-file /etc/cert/ghost-litterra/trusted_chain.cer --fullchain-file /etc/cert/ghost-litterra/full_chain.cer'
+    tags: [create_host, create_ssl]
+
+  - name: (key `ghost-litterra`) Create certificate with `acme.sh`
+    #we need shell as `acme.sh` is a shell script
+    # https://docs.ansible.com/ansible/latest/modules/apt_module.html
+    shell: /root/.acme.sh/acme.sh --force --issue  -d litterra.net -d www.litterra.net -w /var/www/ghost-litterra  --cert-file /etc/cert/ghost-litterra/certificate.cer --key-file /etc/cert/ghost-litterra/priv_key.pem --ca-file /etc/cert/ghost-litterra/trusted_chain.cer --fullchain-file /etc/cert/ghost-litterra/full_chain.cer
+    args:
+      chdir: "/etc/nginx"
+    # https://docs.ansible.com/ansible/latest/user_guide/playbooks_error_handling.html#ignoring-failed-commands
+    ignore_errors: yes
+    tags: [create_host, create_ssl]
+
+
+  # -----------------------------------
+  # Set SSL NGINX Configs
+  # -----------------------------------
+
+  - name: (key `ghost-chaos`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-chaos.conf"
+      dest="/etc/nginx/sites-available//ghost-chaos.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-chaos`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-chaos-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-chaos`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-chaos.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-chaos.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-colabo`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-colabo.conf"
+      dest="/etc/nginx/sites-available//ghost-colabo.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-colabo`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-colabo-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-colabo`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-colabo.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-colabo.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-climathon`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-climathon.conf"
+      dest="/etc/nginx/sites-available//ghost-climathon.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-climathon`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-climathon-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-climathon`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-climathon.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-climathon.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-boradugic`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-boradugic.conf"
+      dest="/etc/nginx/sites-available//ghost-boradugic.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-boradugic`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-boradugic-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-boradugic`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-boradugic.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-boradugic.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-savamrkalj`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-savamrkalj.conf"
+      dest="/etc/nginx/sites-available//ghost-savamrkalj.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-savamrkalj`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-savamrkalj-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-savamrkalj`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-savamrkalj.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-savamrkalj.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-retesla`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-retesla.conf"
+      dest="/etc/nginx/sites-available//ghost-retesla.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-retesla`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-retesla-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-retesla`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-retesla.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-retesla.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-mprinc`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-mprinc.conf"
+      dest="/etc/nginx/sites-available//ghost-mprinc.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-mprinc`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-mprinc-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-mprinc`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-mprinc.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-mprinc.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-litterra`) create SSL `sites-available` config files
+    # https://docs.ansible.com/ansible/latest/modules/copy_module.html
+    copy:
+      src="tmp/nginx-config-ssl__ghost-litterra.conf"
+      dest="/etc/nginx/sites-available//ghost-litterra.conf"
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-litterra`) remove PRESSL config from `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      path: "/etc/nginx/sites-enabled//ghost-litterra-pressl.conf"
+      state: absent
+    tags: [create_host, create_nginx_config]
+
+  - name: (key `ghost-litterra`) link SSL config into `/etc/nginx/sites-enabled/`
+    # https://docs.ansible.com/ansible/latest/modules/file_module.html
+    file:
+      src: "/etc/nginx/sites-available//ghost-litterra.conf"
+      dest: "/etc/nginx/sites-enabled//ghost-litterra.conf"
+      state: link
+    tags: [create_host, create_nginx_config]
+
+
+  # -----------------------------------
+  # Restart NGINX
+  # -----------------------------------
+  - name: SSL - check if nginx config is OK
+    # https://docs.ansible.com/ansible/latest/modules/command_module.html
+    command: nginx -t -c /etc/nginx/nginx.conf
+    tags: [create_host, create_ssl, create_nginx_config]
+
+  - name: SSL - restart nginx
+    service:
+      name: nginx
+      state: restarted
+    tags: [create_host, create_ssl, create_nginx_config]

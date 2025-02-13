@@ -88,6 +88,15 @@ sudo fuser <port>/tcp
 # kill process
 sudo kill -TERM <pid>
 
+ls /etc/systemd/system/
+cat /etc/systemd/system/ghost_ghost-savamrkalj-en.service
+sudo systemctl start ghost_ghost-savamrkalj-sr.service
+sudo systemctl status ghost_ghost-savamrkalj-sr.service
+cd /var/www/ghost-savamrkalj/sr
+sudo -u '#1006' NODE_ENV=production /usr/bin/node /usr/local/bin/ghost run
+
+https://savamrkalj.com/sr/ghost/#/signin
+
 # remove data
 sudo rm -fr /var/www/ghost-retesla/
 ```
