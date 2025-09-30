@@ -4,7 +4,8 @@
 
 ### Updating
 
-see [certificate.md](./certificate.md#Updating)
+Use new way through the [Colabo tool](/colabo/src/tools/puzzles/devop/ansible/templates/nginx/nginx.md)
+- steps 3 and steps 4
 
 ### Installing
 
